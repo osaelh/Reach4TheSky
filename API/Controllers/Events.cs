@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Application.Events;
 using Domain;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,23 +11,36 @@ namespace API.Controllers
 {
     public class Events : BaseApiController
     {
-        private readonly DataContext _dataContext;
-
-        public Events(DataContext dataContext)
-        {
-            _dataContext = dataContext;
-        }
 
         [HttpGet]
         public async Task<ActionResult<List<Event>>> GetEvents()
         {
-           return await _dataContext.Events.ToListAsync();
-        }
+           return await Mediator.Send(new List.Querry());
+        }   
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Event>> GetEventById(Guid id)
         {
-           return await _dataContext.Events.FindAsync(id);
+           return await Mediator.Send(new Details.Querry{Id= id});
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateEvent(Event Event)
+        {
+            return Ok(await Mediator.Send(new Create.Command{Event= Event}));
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> EditEvent(Guid id, Event Event)
+        {
+            Event.Id=id;
+            return Ok(await Mediator.Send(new Edit.Command{Event = Event}));
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteEvent(Guid id)
+        {
+            return Ok(await Mediator.Send(new Delete.Command{Id= id}));
         }
     }
 }
