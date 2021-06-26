@@ -15,7 +15,8 @@ namespace API.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Event>>> GetEvents()
         {
-           return await Mediator.Send(new List.Querry());
+           var events = await Mediator.Send(new List.Querry());
+           return events;
         }   
 
         [HttpGet("{id}")]
