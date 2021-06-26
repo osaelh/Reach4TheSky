@@ -10,9 +10,9 @@ function App() {
 
   const [events, setEvents] = useState<IEvent[]>([]);
   const [selectedEvent, setSelectedEvent] = useState<IEvent | undefined>(undefined);
+  const [editMode, setEditMode] = useState(false);
 
-
-
+  
   useEffect(()=> {
     axios.get<IEvent[]>('http://localhost:5000/api/Events').then(response => {
       console.log(response);
@@ -27,12 +27,20 @@ function App() {
   function handleCancelSelectEvent(){
     setSelectedEvent(undefined);
   }
+ 
+  function handleFormOpen(id?: string){
+    id ? handleSelectEvent(id) : handleCancelSelectEvent();
+    setEditMode(true);
+  }
 
+  function handleFormClose(){
+    setEditMode(false);
+  }
 
   return (
     
     <>
-      <NavBar/>
+      <NavBar openForm={handleFormOpen}/>
      <div style={{marginTop: '5em'}}></div>
      <Container>
      <EventDashboard
@@ -40,6 +48,9 @@ function App() {
       selectedEvent={selectedEvent}
       selectEvent={handleSelectEvent}
       cancelSelectEvent={handleCancelSelectEvent}
+      editMode={editMode}
+      openForm={handleFormOpen}
+      closeForm={handleFormClose}
       ></EventDashboard>
      </Container>
 

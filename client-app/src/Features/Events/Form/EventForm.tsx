@@ -1,7 +1,13 @@
 import React from "react";
 import { Button, Form, Segment } from "semantic-ui-react";
+import { IEvent } from "../../../App/Models/Event";
 
-export default function EventForm(){
+interface IProps{
+    event: IEvent | undefined;
+    closeForm:()=>void;
+}
+
+export default function EventForm({event, closeForm}: IProps){
     return(
         <Segment clearing>
             <Form>
@@ -12,7 +18,7 @@ export default function EventForm(){
                 <Form.Input placeholder='Region'/>
 
                 <Button floated='right' positive type='submit' content='Submit' />
-                <Button floated='right'  type='submit' content='Cancel' />
+                <Button onClick={closeForm} floated='right'  type='submit' content='Cancel' />
             </Form>
         </Segment>
 
