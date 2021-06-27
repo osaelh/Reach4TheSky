@@ -5,9 +5,10 @@ import { IEvent } from "../../../App/Models/Event";
 interface IProps{
    events: IEvent[];
    selectEvent: (id: string) => void;
+   deleteEvent: (id: string) => void;
 }
 
-export default function EventsList({events,selectEvent}: IProps){
+export default function EventsList({events,selectEvent,deleteEvent}: IProps){
     return (
         <Segment>
             <Item.Group divided>
@@ -27,6 +28,7 @@ export default function EventsList({events,selectEvent}: IProps){
                                 </Item.Description>
                                 <Item.Extra>
                                     <Button onClick={()=>selectEvent(event.id)} floated='right' color='blue'>View</Button>
+                                    <Button onClick={()=>deleteEvent(event.id)} floated='right' color='red'>Delete</Button>
                                     <Label basic content={event.categories}/>
                                 </Item.Extra>
                             </Item.Content>

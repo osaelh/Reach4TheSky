@@ -1,21 +1,43 @@
-import React from "react";
+import React, { ChangeEvent } from "react";
+import { useState } from "react";
 import { Button, Form, Segment } from "semantic-ui-react";
 import { IEvent } from "../../../App/Models/Event";
 
 interface IProps{
     event: IEvent | undefined;
     closeForm:()=>void;
+    createOrEditEvent: (event: IEvent)=> void;
 }
 
-export default function EventForm({event, closeForm}: IProps){
+export default function EventForm({event: selectedEvent, closeForm, createOrEditEvent}: IProps){
+
+    const initialState = selectedEvent ?? {
+        id:'',
+        title:'',
+        description:'',
+        date:'',
+        region:'',
+        categories: ''
+    }
+
+    const [event, setEvent] = useState(initialState);
+    function handleSubmit(){
+        console.log(event);
+        createOrEditEvent(event);
+    }
+
+    function handleInputChange(Event : ChangeEvent<HTMLInputElement | HTMLTextAreaElement>){
+        const {name, value} = Event.target;
+        setEvent({...event,[name]: value});
+    }
     return(
         <Segment clearing>
-            <Form>
-                <Form.Input placeholder='Title'/>
-                <Form.TextArea placeholder='Description'/>
-                <Form.Input placeholder='Category'/>
-                <Form.Input placeholder='Date'/>
-                <Form.Input placeholder='Region'/>
+            <Form onSubmit={handleSubmit} autoComplete='off'>
+                <Form.Input placeholder='Title' value={event.title} name='title' onChange={handleInputChange}/>
+                <Form.TextArea placeholder='Description' value={event.description} name='description' onChange={handleInputChange}/>
+                <Form.Input placeholder='Category'  value={event.categories} name='categories' onChange={handleInputChange}/>
+                <Form.Input placeholder='Date' value={event.date} name='date' onChange={handleInputChange}/>
+                <Form.Input placeholder='Region' value={event.region} name='region' onChange={handleInputChange}/>
 
                 <Button floated='right' positive type='submit' content='Submit' />
                 <Button onClick={closeForm} floated='right'  type='submit' content='Cancel' />

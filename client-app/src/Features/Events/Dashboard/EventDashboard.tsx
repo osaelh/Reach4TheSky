@@ -14,13 +14,19 @@ interface IProps{
     editMode : boolean;
     openForm:(id: string) => void;
     closeForm:()=>void;
+    createOrEditEvent: (event: IEvent) => void;
+    deleteEvent:(id: string)=>void;
 }
 
-export default function EventDashboard({events,selectedEvent, selectEvent,cancelSelectEvent, editMode,openForm,closeForm}: IProps){
+export default function EventDashboard({events,selectedEvent, selectEvent,cancelSelectEvent,
+     editMode,openForm,closeForm, createOrEditEvent, deleteEvent}: IProps){
     return (
         <Grid>
             <Grid.Column width="10" >
-            <EventsList events={events} selectEvent={selectEvent}/>
+            <EventsList
+             events={events}
+             selectEvent={selectEvent}
+             deleteEvent={deleteEvent}/>
 
             </Grid.Column>
             <Grid.Column width="6">
@@ -31,7 +37,7 @@ export default function EventDashboard({events,selectedEvent, selectEvent,cancel
                  openForm={openForm}                 
                  />}
                  {editMode &&
-                    <EventForm closeForm={closeForm} event={selectedEvent}/>
+                    <EventForm closeForm={closeForm} event={selectedEvent} createOrEditEvent={createOrEditEvent}/>
                  }
                 
             </Grid.Column>
