@@ -4,32 +4,26 @@ import axios from 'axios';
 import { IEvent } from '../Models/Event';
 import NavBar from './NavBar';
 import EventDashboard from '../../Features/Events/Dashboard/EventDashboard';
-import { Container } from 'semantic-ui-react';
+import { Button, Container } from 'semantic-ui-react';
 import {v4 as uuid} from 'uuid';
 import agent from '../Api/agent';
 import LoadingComponent from './LoadingComponent';
+import { useStore } from '../Stores/store';
+import { observer } from 'mobx-react-lite';
 
 function App() {
+
+  const {eventStore} = useStore();
 
   const [events, setEvents] = useState<IEvent[]>([]);
   const [selectedEvent, setSelectedEvent] = useState<IEvent | undefined>(undefined);
   const [editMode, setEditMode] = useState(false);
-  const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
 
   
-  useEffect(()=> {
-    agent.events.list().then(response => {
-      console.log(response);
-      let events: IEvent[] = [];
-      response.forEach(event=> {
-        event.date = event.date.split('T')[0];
-        events.push(event);
-      }) 
-      setEvents(events);
-      setLoading(false);
-    })
-  }, [])
+  useEffect(()=>{
+    eventStore.loadEvents();
+  }, [eventStore])
 
   function handleSelectEvent(id: string){
     setSelectedEvent(events.find(x => x.id === id));
@@ -77,15 +71,16 @@ function App() {
     })
  
   }
-  if(loading) return <LoadingComponent content="loading app" />
+  if(eventStore.loadingInitial) return <LoadingComponent content="loading app" />
   return (
     
     <>
       <NavBar openForm={handleFormOpen}/>
      <div style={{marginTop: '5em'}}></div>
      <Container>
+
      <EventDashboard
-      events={events}
+      events={eventStore.events}
       selectedEvent={selectedEvent}
       selectEvent={handleSelectEvent}
       cancelSelectEvent={handleCancelSelectEvent}
@@ -104,4 +99,4 @@ function App() {
   );
 }
 
-export default App;
+export default observer(App) ;
