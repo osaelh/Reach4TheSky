@@ -7,9 +7,10 @@ interface IProps{
     event: IEvent | undefined;
     closeForm:()=>void;
     createOrEditEvent: (event: IEvent)=> void;
+    submitting: boolean
 }
 
-export default function EventForm({event: selectedEvent, closeForm, createOrEditEvent}: IProps){
+export default function EventForm({event: selectedEvent, closeForm, createOrEditEvent, submitting}: IProps){
 
     const initialState = selectedEvent ?? {
         id:'',
@@ -36,10 +37,10 @@ export default function EventForm({event: selectedEvent, closeForm, createOrEdit
                 <Form.Input placeholder='Title' value={event.title} name='title' onChange={handleInputChange}/>
                 <Form.TextArea placeholder='Description' value={event.description} name='description' onChange={handleInputChange}/>
                 <Form.Input placeholder='Category'  value={event.categories} name='categories' onChange={handleInputChange}/>
-                <Form.Input placeholder='Date' value={event.date} name='date' onChange={handleInputChange}/>
+                <Form.Input placeholder='Date' type="date" value={event.date} name='date' onChange={handleInputChange}/>
                 <Form.Input placeholder='Region' value={event.region} name='region' onChange={handleInputChange}/>
 
-                <Button floated='right' positive type='submit' content='Submit' />
+                <Button loading={submitting} floated='right' positive type='submit' content='Submit' />
                 <Button onClick={closeForm} floated='right'  type='submit' content='Cancel' />
             </Form>
         </Segment>
