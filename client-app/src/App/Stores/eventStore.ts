@@ -80,9 +80,9 @@ export default class EventStore{
        await agent.events.update(event);
        runInAction(()=>{
          this.events=[...this.events.filter(x=>x.id!== event.id), event];
-         this.events.forEach(element => {
-           console.log(element);
-         });
+        //  this.events.forEach(element => {
+        //    console.log(element);
+        //  });
          this.events.push(event);
          this.selectedEvent=event; 
          this.editMode= false;
