@@ -33,10 +33,13 @@ jobs:
       # - name: Commits before Deployment
       #   run: git config user.email "mohamedmouiguina7@gmail.com" && git config user.name "MOUIGUINA MOHAMED" && git add -A && git commit -m "Updated code"
       - name: update branch
+        env: 
+           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+           APP_NAME: ${{ 'reach4thesky' }}
         run: |
            docker login --username=osaelh --password=$HEROKU_API_KEY registry.heroku.com
            heroku container:login
-           heroku git:remote -a reach4thesky
+           heroku git:remote -a $APP_NAME
            git config --global user.email "oussamaelh@gmail.com" && git config --global user.name "osa elh" && git add . && git commit -m 'update repo'
            git fetch --all --unshallow
            git push heroku main 
