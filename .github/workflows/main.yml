@@ -40,8 +40,7 @@ jobs:
            docker login --username=osaelh --password=$HEROKU_API_KEY registry.heroku.com
            heroku container:login
            heroku git:remote -a $APP_NAME
-           git config --global user.email "oussamaelh@gmail.com" && git config --global user.name "osa elh" && git add . && git commit -m 'update repo'
-           git fetch --all --unshallow
+
       - name: Deploy to heroku  
         uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
         with:
