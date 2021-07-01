@@ -32,16 +32,16 @@ jobs:
           npm run build
       # - name: Commits before Deployment
       #   run: git config user.email "mohamedmouiguina7@gmail.com" && git config user.name "MOUIGUINA MOHAMED" && git add -A && git commit -m "Updated code"
-
-      - name: Deploy to heroku  
-        uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
-        with:
-          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: "reach4thesky" #Must be unique in Heroku
-          heroku_email: "oussamaelh@gmail.com"
+      - name: update branch
         run: |
            heroku container:login
            heroku git:remote -a reach4thesky
            git config --global user.email "oussamaelh@gmail.com" && git config --global user.name "osa elh" && git add . && git commit -m 'update repo'
            git fetch --all --unshallow
            git push heroku main 
+      - name: Deploy to heroku  
+        uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: "reach4thesky" #Must be unique in Heroku
+          heroku_email: "oussamaelh@gmail.com"
