@@ -40,7 +40,6 @@ jobs:
            docker login --username=osaelh --password=$HEROKU_API_KEY registry.heroku.com
            heroku container:login
            heroku git:remote -a $APP_NAME
-       #   git config user.email "oussamaelh@gmail.com" && git config user.name "osa elh" && git add -A && git commit -m "Updated code"
            git push heroku master
 
       - name: Deploy to heroku  
