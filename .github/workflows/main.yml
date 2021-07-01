@@ -39,4 +39,4 @@ jobs:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: "reach4thesky" #Must be unique in Heroku
           heroku_email: "oussamaelh@gmail.com"
-          justlogin: true
+
