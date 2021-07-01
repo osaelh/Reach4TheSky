@@ -30,18 +30,7 @@ jobs:
           cd client-app
           npm install
           npm run build
-      # - name: Commits before Deployment
-      #   run: git config user.email "mohamedmouiguina7@gmail.com" && git config user.name "MOUIGUINA MOHAMED" && git add -A && git commit -m "Updated code"
-      - name: update branch
-        env: 
-           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-           APP_NAME: ${{ 'reach4thesky' }}
-        run: |
-           docker login --username=osaelh --password=$HEROKU_API_KEY registry.heroku.com
-           heroku container:login
-           heroku git:remote -a $APP_NAME
-       #   git config user.email "oussamaelh@gmail.com" && git config user.name "osa elh" && git add -A && git commit -m "Updated code"
-           git push heroku master
+          git config user.email "oussamaelh@gmail.com" && git config user.name "osa elh" && git add -A && git commit -m "Updated code"
 
       - name: Deploy to heroku  
         uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
