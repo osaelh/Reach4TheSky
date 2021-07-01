@@ -3,15 +3,15 @@ import { SyntheticEvent } from "react";
 import { useState } from "react";
 import { Button, Item, Label, Segment } from "semantic-ui-react";
 import { IEvent } from "../../../App/Models/Event";
+import { useStore } from "../../../App/Stores/store";
 
 interface IProps{
    events: IEvent[];
-   selectEvent: (id: string) => void;
    deleteEvent: (id: string) => void;
    submitting: boolean;
 }
 
-export default function EventsList({events,selectEvent,deleteEvent, submitting}: IProps){
+export default function EventsList({events,deleteEvent, submitting}: IProps){
 
     const [target, setTarget] = useState('');
     
@@ -19,6 +19,8 @@ export default function EventsList({events,selectEvent,deleteEvent, submitting}:
         setTarget(e.currentTarget.name);
         deleteEvent(id);
     }
+
+    const {eventStore} = useStore();
 
     return (
         <Segment>
@@ -38,7 +40,7 @@ export default function EventsList({events,selectEvent,deleteEvent, submitting}:
                                     </div>
                                 </Item.Description>
                                 <Item.Extra>
-                                    <Button onClick={()=>selectEvent(event.id)} floated='right' color='blue'>View</Button>
+                                    <Button onClick={()=>eventStore.selectEvent(event.id)} floated='right' color='blue'>View</Button>
                                     <Button name={event.id} loading={submitting && target===event.id} onClick={(e)=>handleEventDelete(e,event.id)} floated='right' color='red'>Delete</Button>
                                     <Label basic content={event.categories}/>
                                 </Item.Extra>

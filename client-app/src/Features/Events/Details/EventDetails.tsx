@@ -1,14 +1,13 @@
 import React from "react";
 import { Button, Card, Image } from "semantic-ui-react";
-import { IEvent } from "../../../App/Models/Event";
+import LoadingComponent from "../../../App/Layout/LoadingComponent";
+import { useStore } from "../../../App/Stores/store";
 
-interface IProps{
-    event : IEvent
-    cancelSelectEvent: ()=> void;
-    openForm:(id: string)=> void;
-}
 
-export default function ActivityDetails({event, cancelSelectEvent,openForm}: IProps){
+export default function ActivityDetails(){
+  const {eventStore} = useStore();
+  const {selectedEvent: event} = eventStore;
+  if(!event) return <LoadingComponent/>;
     return (
         <Card fluid>
     <Image src={`/assets/categoryImages/${event.categories}.jpg`}  />
@@ -21,8 +20,8 @@ export default function ActivityDetails({event, cancelSelectEvent,openForm}: IPr
     </Card.Content>
     <Card.Content extra>
       <Button.Group widths='2'>
-          <Button onClick={()=> openForm(event.id)} color='blue' content='Edit'/>
-          <Button onClick={cancelSelectEvent} color='grey' content='Cancel'/>
+          <Button onClick={()=> eventStore.openForm(event.id)} color='blue' content='Edit'/>
+          <Button onClick={eventStore.cancelSelectedEvent} color='grey' content='Cancel'/>
       </Button.Group>
     </Card.Content>
   </Card>

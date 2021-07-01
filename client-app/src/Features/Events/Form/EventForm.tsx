@@ -1,18 +1,16 @@
+import { observer } from "mobx-react-lite";
 import React, { ChangeEvent } from "react";
 import { useState } from "react";
 import { Button, Form, Segment } from "semantic-ui-react";
-import { IEvent } from "../../../App/Models/Event";
+import { useStore } from "../../../App/Stores/store";
 
-interface IProps{
-    event: IEvent | undefined;
-    closeForm:()=>void;
-    createOrEditEvent: (event: IEvent)=> void;
-    submitting: boolean
-}
 
-export default function EventForm({event: selectedEvent, closeForm, createOrEditEvent, submitting}: IProps){
+export default observer( function EventForm(){
 
-    const initialState = selectedEvent ?? {
+    const {eventStore} = useStore();
+    const{updateEvent, loading,createEvent}= eventStore;
+
+    const initialState = eventStore.selectedEvent ?? {
         id:'',
         title:'',
         description:'',
@@ -24,7 +22,7 @@ export default function EventForm({event: selectedEvent, closeForm, createOrEdit
     const [event, setEvent] = useState(initialState);
     function handleSubmit(){
         console.log(event);
-        createOrEditEvent(event);
+        event.id ? updateEvent(event) : createEvent(event);
     }
 
     function handleInputChange(Event : ChangeEvent<HTMLInputElement | HTMLTextAreaElement>){
@@ -40,10 +38,10 @@ export default function EventForm({event: selectedEvent, closeForm, createOrEdit
                 <Form.Input placeholder='Date' type="date" value={event.date} name='date' onChange={handleInputChange}/>
                 <Form.Input placeholder='Region' value={event.region} name='region' onChange={handleInputChange}/>
 
-                <Button loading={submitting} floated='right' positive type='submit' content='Submit' />
-                <Button onClick={closeForm} floated='right'  type='submit' content='Cancel' />
+                <Button loading={loading} floated='right' positive type='submit' content='Submit' />
+                <Button onClick={eventStore.closeForm} floated='right'  type='submit' content='Cancel' />
             </Form>
         </Segment>
 
     )
-}
+})
