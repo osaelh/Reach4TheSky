@@ -44,4 +44,4 @@ jobs:
            heroku git:remote -a reach4thesky
            git config --global user.email "oussamaelh@gmail.com" && git config --global user.name "osa elh" && git add . && git commit -m 'update repo'
            git fetch --all --unshallow
-           git push heroku main --force
+           git push heroku main 
