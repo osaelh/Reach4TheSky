@@ -39,4 +39,9 @@ jobs:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: "reach4thesky" #Must be unique in Heroku
           heroku_email: "oussamaelh@gmail.com"
-
+       - run: |
+           heroku container:login
+           heroku git:remote -a reach4thesky
+           git config --global user.email "oussamaelh@gmail.com" && git config --global user.name "osa elh" && git add . && git commit -m 'update repo'
+           git fetch --all --unshallow
+           git push heroku main --force
