@@ -40,13 +40,14 @@ jobs:
            docker login --username=osaelh --password=$HEROKU_API_KEY registry.heroku.com
            heroku container:login
            heroku git:remote -a $APP_NAME
+           heroku buildpacks:set jincod/dotnetcore
            git config --global user.email "oussamaelh@gmail.com" && git config --global user.name "osa elh" && git add . && git commit -m 'update repo'
            git fetch --all --unshallow
-           git push heroku main 
       - name: Deploy to heroku  
         uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: "reach4thesky" #Must be unique in Heroku
           heroku_email: "oussamaelh@gmail.com"
+       
 
