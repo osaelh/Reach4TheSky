@@ -83,7 +83,6 @@ export default class EventStore{
         //  this.events.forEach(element => {
         //    console.log(element);
         //  });
-         this.events.push(event);
          this.selectedEvent=event; 
          this.editMode= false;
          this.loading=false;
