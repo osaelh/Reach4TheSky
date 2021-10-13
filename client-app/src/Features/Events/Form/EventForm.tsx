@@ -39,7 +39,7 @@ export default observer( function EventForm(){
                 <Form.Input placeholder='Region' value={event.region} name='region' onChange={handleInputChange}/>
 
                 <Button loading={loading} floated='right' positive type='submit' content='Submit' />
-                <Button onClick={eventStore.closeForm} floated='right'  type='submit' content='Cancel' />
+                <Button  floated='right'  type='submit' content='Cancel' />
             </Form>
         </Segment>
 

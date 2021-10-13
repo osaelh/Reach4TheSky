@@ -1,13 +1,21 @@
-import React from "react";
+import { observer } from "mobx-react-lite";
+import React, { useEffect } from "react";
+import { useParams } from "react-router";
 import { Button, Card, Image } from "semantic-ui-react";
 import LoadingComponent from "../../../App/Layout/LoadingComponent";
 import { useStore } from "../../../App/Stores/store";
 
 
-export default function ActivityDetails(){
+export default observer(function ActivityDetails(){
   const {eventStore} = useStore();
-  const {selectedEvent: event} = eventStore;
-  if(!event) return <LoadingComponent/>;
+  const {selectedEvent: event, loadEventById, loadingInitial} = eventStore;
+  const {id} = useParams<{id: string}>();
+
+  useEffect(()=> {
+    if (id) loadEventById(id);
+  },[id, loadEventById]);
+
+  if(!event || loadingInitial) return <LoadingComponent/>;
     return (
         <Card fluid>
     <Image src={`/assets/categoryImages/${event.categories}.jpg`}  />
@@ -20,10 +28,11 @@ export default function ActivityDetails(){
     </Card.Content>
     <Card.Content extra>
       <Button.Group widths='2'>
-          <Button onClick={()=> eventStore.openForm(event.id)} color='blue' content='Edit'/>
-          <Button onClick={eventStore.cancelSelectedEvent} color='grey' content='Cancel'/>
+          <Button color='blue' content='Edit'/>
+          <Button color='grey' content='Cancel'/>
       </Button.Group>
     </Card.Content>
   </Card>
     )
 }
+)

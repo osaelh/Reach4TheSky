@@ -5,11 +5,14 @@ import './App/Layout/index.css';
 import App from './App/Layout/App';
 import reportWebVitals from './reportWebVitals';
 import { eventContext, store } from './App/Stores/store';
+import { BrowserRouter } from 'react-router-dom';
 
 ReactDOM.render(
   <React.StrictMode>
     <eventContext.Provider value={store}>
+      <BrowserRouter>
       <App />
+      </BrowserRouter>
     </eventContext.Provider>
   
   </React.StrictMode>,

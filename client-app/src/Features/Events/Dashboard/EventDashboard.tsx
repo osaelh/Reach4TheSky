@@ -1,17 +1,23 @@
 
 import { observer } from "mobx-react-lite";
-import React from "react";
+import React, { useEffect } from "react";
 import { Grid } from "semantic-ui-react";
+import LoadingComponent from "../../../App/Layout/LoadingComponent";
 import { useStore } from "../../../App/Stores/store";
-import EventDetails from "../Details/EventDetails";
-import EventForm from "../Form/EventForm";
 import EventsList from "./EventsList";
 
 
 
 export default observer(function EventDashboard(){
-        const{eventStore} = useStore()
-        const{ selectedEvent,editMode} = eventStore;
+        const{eventStore} = useStore();
+
+        useEffect(()=>{
+          eventStore.loadEvents();
+        }, [eventStore])
+      
+        
+      
+        if(eventStore.loadingInitial) return <LoadingComponent content="loading app" />
     return (
 
        
@@ -21,11 +27,7 @@ export default observer(function EventDashboard(){
 
             </Grid.Column>
             <Grid.Column width="6">
-                {selectedEvent && !editMode &&
-                <EventDetails />}
-                 {editMode &&
-                    <EventForm />
-                 }
+               <h2>Events filter</h2>
                 
             </Grid.Column>
         </Grid>
