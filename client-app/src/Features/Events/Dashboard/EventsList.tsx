@@ -1,26 +1,23 @@
+import { observer } from "mobx-react-lite";
 import React from "react";
 import { SyntheticEvent } from "react";
 import { useState } from "react";
 import { Button, Item, Label, Segment } from "semantic-ui-react";
-import { IEvent } from "../../../App/Models/Event";
 import { useStore } from "../../../App/Stores/store";
 
-interface IProps{
-   events: IEvent[];
-   deleteEvent: (id: string) => void;
-   submitting: boolean;
-}
 
-export default function EventsList({events,deleteEvent, submitting}: IProps){
+export default observer(function EventsList(){
 
     const [target, setTarget] = useState('');
+    const {eventStore} = useStore();
+    const {deleteEvent, events, loading} = eventStore;
+    
     
     function handleEventDelete(e: SyntheticEvent<HTMLButtonElement>, id: string){
         setTarget(e.currentTarget.name);
         deleteEvent(id);
     }
 
-    const {eventStore} = useStore();
 
     return (
         <Segment>
@@ -41,7 +38,7 @@ export default function EventsList({events,deleteEvent, submitting}: IProps){
                                 </Item.Description>
                                 <Item.Extra>
                                     <Button onClick={()=>eventStore.selectEvent(event.id)} floated='right' color='blue'>View</Button>
-                                    <Button name={event.id} loading={submitting && target===event.id} onClick={(e)=>handleEventDelete(e,event.id)} floated='right' color='red'>Delete</Button>
+                                    <Button name={event.id} loading={loading && target===event.id} onClick={(e)=>handleEventDelete(e,event.id)} floated='right' color='red'>Delete</Button>
                                     <Label basic content={event.categories}/>
                                 </Item.Extra>
                             </Item.Content>
@@ -52,4 +49,4 @@ export default function EventsList({events,deleteEvent, submitting}: IProps){
 
     )
 }
-
+)

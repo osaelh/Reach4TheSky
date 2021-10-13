@@ -95,4 +95,25 @@ export default class EventStore{
      }
    }
 
+   deleteEvent = async (id: string)=>{
+     this.loading=true;
+     try {
+       await agent.events.delete(id);
+       runInAction(()=>{
+        this.events = this.events.filter(e=>e.id !== id);
+        if(this.selectedEvent?.id === id){
+          this.cancelSelectedEvent();
+        }
+        this.loading= false;
+       })
+
+       
+     } catch (error) {
+       console.log(error);
+       runInAction(()=>{
+         this.loading= false;
+       })
+     }
+   }
+
 }
