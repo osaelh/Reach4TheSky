@@ -10,7 +10,7 @@ export default observer(function EventsList(){
 
     const [target, setTarget] = useState('');
     const {eventStore} = useStore();
-    const {deleteEvent, events, loading} = eventStore;
+    const {deleteEvent, eventsByDate, loading} = eventStore;
     
     
     function handleEventDelete(e: SyntheticEvent<HTMLButtonElement>, id: string){
@@ -22,7 +22,7 @@ export default observer(function EventsList(){
     return (
         <Segment>
             <Item.Group divided>
-                {events.map(event =>
+                {eventsByDate.map(event =>
                     (
                         <Item key={event.id}>
                             <Item.Content>

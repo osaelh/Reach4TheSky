@@ -4,7 +4,8 @@ import { IEvent } from "../Models/Event";
 import { v4 as uuid } from "uuid";
 
 export default class EventStore{
-    events: IEvent[]= []
+    // events: IEvent[]= [];
+    eventsRegistry = new Map<string, IEvent>();
     selectedEvent : IEvent | undefined = undefined;
     editMode = false;
     loading =false;
@@ -12,6 +13,11 @@ export default class EventStore{
 
     constructor(){
         makeAutoObservable(this)
+    }
+
+    get eventsByDate(){
+      return Array.from(this.eventsRegistry.values()).sort((a, b) => 
+      Date.parse(a.date) - Date.parse(b.date));
     }
 
     loadEvents = async ()=>{
@@ -22,7 +28,8 @@ export default class EventStore{
 
             events.forEach(event=> {
                 event.date = event.date.split('T')[0];
-                this.events.push(event);
+                // this.events.push(event);
+                this.eventsRegistry.set(event.id, event);
               }) 
 
               this.setLoadingInitial(false);
@@ -38,7 +45,8 @@ export default class EventStore{
    }
 
    selectEvent = (id: string)=>{
-     this.selectedEvent= this.events.find(a => a.id===id);
+    //  this.selectedEvent= this.events.find(a => a.id===id);
+    this.selectedEvent = this.eventsRegistry.get(id);
    }
 
    cancelSelectedEvent=()=>{
@@ -60,7 +68,8 @@ export default class EventStore{
      try {
        await agent.events.create(event);
        runInAction(()=>{
-         this.events.push(event);
+        //  this.events.push(event);
+        this.eventsRegistry.set(event.id, event);
          this.selectedEvent= event;
          this.editMode=false;
          this.loading=false;
@@ -79,7 +88,8 @@ export default class EventStore{
      try {
        await agent.events.update(event);
        runInAction(()=>{
-         this.events=[...this.events.filter(x=>x.id!== event.id), event];
+        //  this.events=[...this.events.filter(x=>x.id!== event.id), event];
+        this.eventsRegistry.set(event.id, event);
         //  this.events.forEach(element => {
         //    console.log(element);
         //  });
@@ -100,7 +110,7 @@ export default class EventStore{
      try {
        await agent.events.delete(id);
        runInAction(()=>{
-        this.events = this.events.filter(e=>e.id !== id);
+        this.eventsRegistry.delete(id);
         if(this.selectedEvent?.id === id){
           this.cancelSelectedEvent();
         }
