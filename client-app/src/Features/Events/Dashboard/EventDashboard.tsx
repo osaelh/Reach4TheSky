@@ -10,10 +10,11 @@ import EventsList from "./EventsList";
 
 export default observer(function EventDashboard(){
         const{eventStore} = useStore();
+        const {loadEvents, eventsRegistry} = eventStore;
 
         useEffect(()=>{
-          eventStore.loadEvents();
-        }, [eventStore])
+         if(eventsRegistry.size <= 1)  loadEvents();
+        }, [eventStore, loadEvents, eventsRegistry.size])
       
         
       

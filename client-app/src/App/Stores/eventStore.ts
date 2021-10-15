@@ -1,7 +1,7 @@
 import { makeAutoObservable, runInAction} from "mobx";
 import agent from "../Api/agent";
 import { IEvent } from "../Models/Event";
-import { v4 as uuid } from "uuid";
+
 
 export default class EventStore{
     // events: IEvent[]= [];
@@ -21,14 +21,17 @@ export default class EventStore{
     }
 
     loadEvents = async ()=>{
+      this.setLoadingInitial(true);
       try {
         const events = await agent.events.list();
 
             events.forEach(event=> {
                 event.date = event.date.split('T')[0];
                 // this.events.push(event);
-                this.eventsRegistry.set(event.id, event);
-              }) 
+                runInAction(()=>{
+                  this.eventsRegistry.set(event.id, event);
+                });
+              }) ;
 
               this.setLoadingInitial(false);
 
@@ -41,14 +44,18 @@ export default class EventStore{
     loadEventById = async (id : string)=>{
       let event = this.getEvent(id);
       if(event){
-        this.selectedEvent = event
+        this.selectedEvent = event;
+        return event;
       } else {
         this.loadingInitial = true;
         try {
           event = await agent.events.details(id);
           this.setEvent(event);
-          this.selectedEvent =event;
+          runInAction(()=>{
+            this.selectedEvent =event;
+          });
           this.setLoadingInitial(false);
+          return event;
           
         } catch (error) {
           console.log(error);
@@ -91,7 +98,6 @@ export default class EventStore{
 
    createEvent=async (event: IEvent)=>{
      this.loading=true;
-     event.id=uuid();
      try {
        await agent.events.create(event);
        runInAction(()=>{

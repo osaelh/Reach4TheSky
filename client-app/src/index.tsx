@@ -8,14 +8,13 @@ import { eventContext, store } from './App/Stores/store';
 import { BrowserRouter } from 'react-router-dom';
 
 ReactDOM.render(
-  <React.StrictMode>
     <eventContext.Provider value={store}>
       <BrowserRouter>
       <App />
       </BrowserRouter>
-    </eventContext.Provider>
+    </eventContext.Provider>,
   
-  </React.StrictMode>,
+
   document.getElementById('root')
 );
 
