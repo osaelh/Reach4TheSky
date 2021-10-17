@@ -4,6 +4,7 @@ import React, { useEffect } from "react";
 import { Grid } from "semantic-ui-react";
 import LoadingComponent from "../../../App/Layout/LoadingComponent";
 import { useStore } from "../../../App/Stores/store";
+import EventFilter from "./EventFilter";
 import EventsList from "./EventsList";
 
 
@@ -23,13 +24,12 @@ export default observer(function EventDashboard(){
 
        
         <Grid>
-            <Grid.Column width="10" >
+            <Grid.Column width="10">
             <EventsList/>
-
             </Grid.Column>
             <Grid.Column width="6">
                <h2>Events filter</h2>
-                
+                <EventFilter/>
             </Grid.Column>
         </Grid>
     )

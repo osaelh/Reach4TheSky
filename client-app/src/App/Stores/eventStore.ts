@@ -20,6 +20,23 @@ export default class EventStore{
       Date.parse(a.date) - Date.parse(b.date));
     }
 
+    get groupedEvents(){
+      return Object.entries(
+        this.eventsByDate.reduce((events, event)=>{
+          const date = event.date;
+          // events[date] = events[date] ? [...events[date], event] : [event];
+          if (!events[date]) {
+            events[date] = [event];
+            
+          }else{
+            events[date].push(event);
+          }
+
+          return events
+        }, {} as {[Key: string]: IEvent[]})
+      )
+    }
+
     loadEvents = async ()=>{
       this.setLoadingInitial(true);
       try {
