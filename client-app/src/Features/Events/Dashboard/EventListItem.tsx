@@ -1,23 +1,13 @@
-import React, { SyntheticEvent, useState } from "react";
-import { Link, NavLink } from "react-router-dom";
-import { Button, Grid, Icon, Item, ItemContent, ItemDescription, ItemGroup, ItemHeader, ItemImage, Label, Segment } from "semantic-ui-react";
+import { Link } from "react-router-dom";
+import { Button, Grid, Icon, Item, Segment } from "semantic-ui-react";
 import { IEvent } from "../../../App/Models/Event";
-import { useStore } from "../../../App/Stores/store";
 
 interface IProps {
     event : IEvent;
 }
 
 export default function EventListItem({event}: IProps){
-    const [target, setTarget] = useState('');
-    const {eventStore} = useStore();
-    const {deleteEvent, loading} = eventStore;
-    
-    
-    function handleEventDelete(e: SyntheticEvent<HTMLButtonElement>, id: string){
-        setTarget(e.currentTarget.name);
-        deleteEvent(id);
-    }
+
     return(
         <Segment.Group>
             <Segment>

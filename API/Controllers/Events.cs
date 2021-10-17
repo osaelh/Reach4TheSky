@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Application.Core;
 using Application.Events;
 using Domain;
 using Microsoft.AspNetCore.Mvc;
@@ -20,9 +21,11 @@ namespace API.Controllers
         }   
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Event>> GetEventById(Guid id)
+        public async Task<IActionResult> GetEventById(Guid id)
         {
-           return await Mediator.Send(new Details.Querry{Id= id});
+           var result = await Mediator.Send(new Details.Querry{Id= id});
+           return HandleResult<Event>(result);
+
         }
 
         [HttpPost]
