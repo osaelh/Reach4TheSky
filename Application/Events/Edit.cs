@@ -1,5 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Core;
 using AutoMapper;
 using Domain;
 using FluentValidation;
@@ -10,7 +11,7 @@ namespace Application.Events
 {
     public class Edit
     {
-        public class Command : IRequest
+        public class Command : IRequest<Result<Unit>>
         {
             public Event Event { get; set; }
         }
@@ -23,7 +24,7 @@ namespace Application.Events
             }
         }
 
-        public class Handler : IRequestHandler<Command>
+        public class Handler : IRequestHandler<Command, Result<Unit>>
         {
             private readonly DataContext _dataContext;
             private readonly IMapper _mapper;
@@ -34,18 +35,23 @@ namespace Application.Events
                 _mapper = mapper;
             }
 
-            public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
             {
               var Event = await _dataContext.Events.FindAsync(request.Event.Id);
 
-            //   Event.Title = request.Event.Title ?? Event.Title;
-            //   Event.Description = request.Event.Description ?? Event.Description;
-            //   Event.Categories = request.Event.Categories ?? Event.Categories;
+              if (Event == null )
+              {
+                  return null;
+              }
 
              _mapper.Map(request.Event, Event);
 
-              await _dataContext.SaveChangesAsync();
-              return Unit.Value;
+              var result = await _dataContext.SaveChangesAsync();
+              if (result == 0)
+              {
+                  return Result<Unit>.Failure("Failed to edit the event");
+              }
+              return Result<Unit>.Success(Unit.Value);
 
             }
         }
