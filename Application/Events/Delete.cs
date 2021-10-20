@@ -26,10 +26,10 @@ namespace Application.Events
             public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
             {
                var Event = await _dataContext.Events.FindAsync(request.Id);
-               if (Event == null)
-               {
-                   return null;
-               }
+            //    if (Event == null)
+            //    {
+            //        return null;
+            //    }
                _dataContext.Remove(Event);
                 var result = await _dataContext.SaveChangesAsync() > 0;
                 if (!result)

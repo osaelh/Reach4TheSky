@@ -13,6 +13,7 @@ export default function NavBar(){
 
                 </Menu.Item>
                 <Menu.Item as={NavLink} to='/events' name="Events"/>
+                <Menu.Item as={NavLink} to='/errors' name="Test errors"/>
                 <Menu.Item>
                     <Button as={NavLink} to='/createEvent' positive content='Create Event'/>
                 </Menu.Item>
