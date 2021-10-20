@@ -10,6 +10,7 @@ import EventDetails from '../../Features/Events/Details/EventDetails';
 import TestErrors from '../../Features/errors/TestErrors';
 import { ToastContainer } from 'react-toastify';
 import NotFound from '../../Features/errors/NotFound';
+import ServerError from '../../Features/errors/ServerError';
 
 
 function App() {
@@ -32,6 +33,7 @@ function App() {
       <Route path='/events/:id' component={EventDetails} />
       <Route key={location.key} path={['/createEvent','/manage/:id']} component={EventForm} />
       <Route path='/errors' component={TestErrors}/>
+      <Route path='/server-error' component={ServerError}/>
       <Route component={NotFound}/>
       </Switch>
 
