@@ -1,5 +1,6 @@
 import { observer } from 'mobx-react-lite';
 import React from 'react'
+import { Link } from 'react-router-dom';
 import {Button, Header, Item, Segment, Image} from 'semantic-ui-react'
 import { IEvent } from '../../../App/Models/Event';
 
@@ -46,7 +47,7 @@ export default observer (function EventDetailedHeader({event}: Props) {
             <Segment clearing attached='bottom'>
                 <Button color='teal'>Join Event</Button>
                 <Button>Cancel </Button>
-                <Button color='orange' floated='right'>
+                <Button as={Link} to={`/manage/${event.id}`} color='orange' floated='right'>
                     Manage Event
                 </Button>
             </Segment>
