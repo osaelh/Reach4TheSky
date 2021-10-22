@@ -43,6 +43,7 @@ namespace API
 
             });
             services.AddAppServices(_configuration);
+            services.AddIdentityServices(_configuration);
 
         }
 
