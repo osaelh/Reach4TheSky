@@ -27,6 +27,10 @@ body{
   background: #fff;
 }
 
+.react-datepicker-wrapper{
+  width: 100%;
+}
+
 .mainHeader{
   /* background-color: #8EC5FC !important;
   background-image: linear-gradient(62deg, #8EC5FC 36%, #E0C3FC 99%) !important; */

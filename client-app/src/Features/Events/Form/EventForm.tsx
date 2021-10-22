@@ -1,15 +1,18 @@
 import { observer } from "mobx-react-lite";
-import React, { ChangeEvent, useEffect } from "react";
+import { useEffect } from "react";
 import { useState } from "react";
 import { useHistory, useParams } from "react-router";
 import { Link } from "react-router-dom";
-import { Button, FormField, Label, Segment } from "semantic-ui-react";
+import { Button, Segment } from "semantic-ui-react";
 import LoadingComponent from "../../../App/Layout/LoadingComponent";
 import { useStore } from "../../../App/Stores/store";
-import { v4 as uuid } from "uuid";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Formik, Form } from "formik";
 import * as Yup from 'yup';
-import { error } from "console";
+import MyTextInput from "../../../App/Common/Form/MyTextInput";
+import MyTextArea from "../../../App/Common/Form/MyTextArea";
+import MySelectInput from "../../../App/Common/Form/MySelectInput";
+import { categoryOption } from "../../../App/Common/Options/CategoryOptions";
+import MyDateInput from "../../../App/Common/Form/MyDateInput";
 
 
 
@@ -30,7 +33,11 @@ export default observer( function EventForm(){
     });
 
     const validationSchema = Yup.object({
-        title: Yup.string().required('the title is required')
+        title: Yup.string().required('the title is required'),
+        description: Yup.string().required('The description is required'),
+        categories: Yup.string().required('the category is required'),
+        date: Yup.string().required('The date is required'),
+        region: Yup.string().required('The region is required')
     })
 
     useEffect(()=>{
@@ -79,17 +86,20 @@ export default observer( function EventForm(){
               validationSchema={validationSchema}>
                 {({handleSubmit})=>
                               <Form className='ui form' onSubmit={handleSubmit} autoComplete='off'>
-                              <FormField>    
-                              <Field placeholder='Title'  name='title'/>
-                              <ErrorMessage name='title' render={error=><Label basic color='red' content={error}/>}></ErrorMessage>
-                              </FormField>
-                              <Field placeholder='Description' name='description'/>
-                              <Field placeholder='Category'  name='categories' />
-                              <Field placeholder='Date' type="date"  name='date'/>
-                              <Field placeholder='Region'  name='region'/>
+                                  <MyTextInput placeholder='Title' name='title'/>
+                                  <MyTextArea rows={3} placeholder='Description' name='description'/>
+                                  <MySelectInput placeholder='Category' name='categories' options={categoryOption}/>
+                                  <MyDateInput 
+                                  placeholderText='Date'
+                                  name='date'
+                                  showTimeSelect
+                                  timeCaption='time'
+                                  dateFormat='MMMM d, yyy h:mm aa'
+                                  />
+                                  <MyTextInput placeholder='Region'  name='region'/>
               
-                              <Button loading={loading} floated='right' positive type='submit' content='Submit' />
-                              <Button as={Link} to='/events' floated='right'  type='submit' content='Cancel' />
+                                  <Button loading={loading} floated='right' positive type='submit' content='Submit' />
+                                  <Button as={Link} to='/events' floated='right'  type='submit' content='Cancel' />
                           </Form>
                 }
             </Formik>
