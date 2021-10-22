@@ -1,3 +1,4 @@
+import { format } from "date-fns/esm";
 import { Link } from "react-router-dom";
 import { Button, Grid, Icon, Item, Segment } from "semantic-ui-react";
 import { IEvent } from "../../../App/Models/Event";
@@ -29,7 +30,7 @@ export default function EventListItem({event}: IProps){
                 <span>
                     <Grid>
                         <Grid.Column width='6'>
-                            <Icon name='clock'/> {event.date}
+                            <Icon name='clock'/> {format(event.date!,'dd MMM yyy h:mm aa') }
                         </Grid.Column>
            
                         <Grid.Column width='6'>

@@ -1,3 +1,4 @@
+import { format } from "date-fns";
 import { makeAutoObservable, runInAction} from "mobx";
 import agent from "../Api/agent";
 import { IEvent } from "../Models/Event";
@@ -17,13 +18,13 @@ export default class EventStore{
 
     get eventsByDate(){
       return Array.from(this.eventsRegistry.values()).sort((a, b) => 
-      Date.parse(a.date) - Date.parse(b.date));
+      a.date!.getTime() - a.date!.getTime());
     }
 
     get groupedEvents(){
       return Object.entries(
         this.eventsByDate.reduce((events, event)=>{
-          const date = event.date;
+          const date = format(event.date!, 'dd MMM yyyy') ;
           // events[date] = events[date] ? [...events[date], event] : [event];
           if (!events[date]) {
             events[date] = [event];
@@ -43,7 +44,7 @@ export default class EventStore{
         const events = await agent.events.list();
 
             events.forEach(event=> {
-                event.date = event.date.split('T')[0];
+                this.setEvent(event);
                 // this.events.push(event);
                 runInAction(()=>{
                   this.eventsRegistry.set(event.id, event);
@@ -87,7 +88,7 @@ export default class EventStore{
     }
 
     private setEvent(event: IEvent){
-      event.date = event.date.split('T')[0];
+      event.date = new Date(event.date!);
       this.eventsRegistry.set(event.id, event);
     }
 

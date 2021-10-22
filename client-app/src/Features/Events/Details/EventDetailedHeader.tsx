@@ -1,3 +1,4 @@
+import { format } from 'date-fns';
 import { observer } from 'mobx-react-lite';
 import React from 'react'
 import { Link } from 'react-router-dom';
@@ -35,7 +36,7 @@ export default observer (function EventDetailedHeader({event}: Props) {
                                     content={event.title}
                                     style={{color: 'white'}}
                                 />
-                                <p>{event.date}</p>
+                                <p>{format(event.date!, 'dd MMM yyyy') }</p>
                                 <p>
                                     Added by <strong>Bob</strong>
                                 </p>

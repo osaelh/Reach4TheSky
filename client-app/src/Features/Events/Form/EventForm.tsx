@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { useHistory, useParams } from "react-router";
 import { Link } from "react-router-dom";
-import { Button, Segment } from "semantic-ui-react";
+import { Button, Header, Segment } from "semantic-ui-react";
 import LoadingComponent from "../../../App/Layout/LoadingComponent";
 import { useStore } from "../../../App/Stores/store";
 import { Formik, Form } from "formik";
@@ -13,6 +13,9 @@ import MyTextArea from "../../../App/Common/Form/MyTextArea";
 import MySelectInput from "../../../App/Common/Form/MySelectInput";
 import { categoryOption } from "../../../App/Common/Options/CategoryOptions";
 import MyDateInput from "../../../App/Common/Form/MyDateInput";
+import { IEvent } from "../../../App/Models/Event";
+import { v4 as uuid } from 'uuid';
+
 
 
 
@@ -23,11 +26,11 @@ export default observer( function EventForm(){
     const{updateEvent, loading,createEvent, loadEventById}= eventStore;
     const {id} = useParams<{id: string}>();
     const history = useHistory();
-    const [event, setEvent] = useState({
+    const [event, setEvent] = useState<IEvent>({
         id:'',
         title:'',
         description:'',
-        date:'',
+        date: null,
         region:'',
         categories: ''
     });
@@ -35,7 +38,7 @@ export default observer( function EventForm(){
     const validationSchema = Yup.object({
         title: Yup.string().required('the title is required'),
         description: Yup.string().required('The description is required'),
-        categories: Yup.string().required('the category is required'),
+        categories: Yup.string().required('the category is required').nullable(),
         date: Yup.string().required('The date is required'),
         region: Yup.string().required('The region is required')
     })
@@ -56,18 +59,18 @@ export default observer( function EventForm(){
     // }
 
 
-    // function handleSubmit(){
-    //     console.log(event);
-    //     if (event.id.length === 0) {
-    //         let newEvent = {
-    //             ...event,
-    //             id: uuid()
-    //         }
-    //         createEvent(newEvent).then(()=> history.push(`/events/${event.id}`));
-    //     } else {
-    //         updateEvent(event).then(()=> history.push(`/events/${event.id}`));
-    //     }
-    // }
+    function handleFormSubmit(event: IEvent){
+        console.log(event);
+        if (event.id.length === 0) {
+            let newEvent = {
+                ...event,
+                id: uuid()
+            }
+            createEvent(newEvent).then(()=> history.push(`/events/${event.id}`));
+        } else {
+            updateEvent(event).then(()=> history.push(`/events/${event.id}`));
+        }
+    }
 
     // function handleInputChange(Event : ChangeEvent<HTMLInputElement | HTMLTextAreaElement>){
     //     const {name, value} = Event.target;
@@ -80,11 +83,12 @@ export default observer( function EventForm(){
 
     return(
         <Segment clearing>
+            <Header content='Event details' subheader color='teal'/>
             <Formik enableReinitialize
              initialValues={event}
-              onSubmit={values => console.log(values)}
+              onSubmit={values => handleFormSubmit(values)}
               validationSchema={validationSchema}>
-                {({handleSubmit})=>
+                {({handleSubmit, isValid, isSubmitting, dirty})=>
                               <Form className='ui form' onSubmit={handleSubmit} autoComplete='off'>
                                   <MyTextInput placeholder='Title' name='title'/>
                                   <MyTextArea rows={3} placeholder='Description' name='description'/>
@@ -96,9 +100,15 @@ export default observer( function EventForm(){
                                   timeCaption='time'
                                   dateFormat='MMMM d, yyy h:mm aa'
                                   />
+                                   <Header content='Location details' subheader color='teal'/>
                                   <MyTextInput placeholder='Region'  name='region'/>
               
-                                  <Button loading={loading} floated='right' positive type='submit' content='Submit' />
+                                  <Button
+                                   disabled={isSubmitting || !dirty || !isValid}
+                                   loading={loading}
+                                   floated='right' positive type='submit' content='Submit'
+                                   
+                                  />
                                   <Button as={Link} to='/events' floated='right'  type='submit' content='Cancel' />
                           </Form>
                 }
