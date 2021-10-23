@@ -2,6 +2,7 @@ import axios, { AxiosError, AxiosResponse } from "axios";
 import { toast } from "react-toastify";
 import { History } from "../..";
 import { IEvent } from "../Models/Event";
+import { User, UserFormValues } from "../Models/User";
 import { store } from "../Stores/store";
 
 axios.defaults.baseURL = "http://localhost:5000/api";
@@ -70,8 +71,15 @@ const events = {
 
 }
 
+const accounts = {
+    current: () => requests.get<User>(`/account`),
+    login: (user: UserFormValues) => requests.post<User>('/account/login', user),
+    register: (user: UserFormValues) => requests.post<User>('/account/register', user)
+}
+
 const agent = {
-    events
+    events,
+    accounts
 }
 
 export default agent;

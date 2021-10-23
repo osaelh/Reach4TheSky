@@ -1,14 +1,14 @@
 import React from "react";
 import Calendar from "react-calendar";
-import { Header, Menu } from "semantic-ui-react";
+import { Header, Icon, Menu } from "semantic-ui-react";
 
 
 export default function EventFilter(){
     return (
         <>
             <Menu vertical size={"large"} style={{width: '100%'}}>
-              <Header icon='filter' attached color='teal'>
-                Filters
+              <Header attached color='teal'>
+              <Icon name="filter"/>Filters
               </Header>
               <Menu.Item content='All events'/>
               <Menu.Item content="I'm attending"/>
