@@ -3,20 +3,29 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using API.Dtos;
+using API.Services;
 using Domain;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace API.Controllers
 {
+    [AllowAnonymous]
     [ApiController]
     [Route("/api/[Controller]")]
     public class Account : ControllerBase
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
-        public Account(UserManager<User> userManager, SignInManager<User> signInManager)
+
+        private readonly TokenService _tokenService;
+        public Account(UserManager<User> userManager,
+         SignInManager<User> signInManager,
+
+         TokenService tokenService)
         {
+            _tokenService = tokenService;
             _signInManager = signInManager;
             _userManager = userManager;
         }
@@ -37,7 +46,7 @@ namespace API.Controllers
                 {
                     DisplayName= user.DisplayName,
                     Image = null,
-                    Token = "Token",
+                    Token = _tokenService.CreateToken(user),
                     UserName = user.UserName
                 };
             }
