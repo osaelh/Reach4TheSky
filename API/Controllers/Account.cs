@@ -8,6 +8,8 @@ using Domain;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace API.Controllers
 {
@@ -52,5 +54,55 @@ namespace API.Controllers
             }
             return Unauthorized();
         } 
+
+        [HttpPost("register")]
+        public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
+        {
+            if (await _userManager.Users.AnyAsync(x=> x.Email == registerDto.Email))
+            {
+                return BadRequest("Email taken");
+            }
+            if (await _userManager.Users.AnyAsync(x=> x.UserName == registerDto.UserName))
+            {
+                return BadRequest("UserName taken");
+            }
+
+            var user = new User
+            {
+                DisplayName = registerDto.DisplayName,
+                Email = registerDto.Email,
+                UserName = registerDto.UserName
+            };
+
+            var result = await _userManager.CreateAsync(user, registerDto.Password);
+
+            if(result.Succeeded)
+            {
+                return new UserDto 
+                {
+                    DisplayName = user.DisplayName,
+                    Image = null,
+                    UserName = user.UserName,
+                    Token = _tokenService.CreateToken(user)
+                };
+            }
+
+            return BadRequest("Problem in registration");
+        }
+         
+        [Authorize]
+        [HttpGet]
+        public async Task<ActionResult<UserDto>> GetCurrentUser()
+        {
+            var user = await _userManager.FindByEmailAsync(User.FindFirstValue(ClaimTypes.Email));
+
+            return  new UserDto 
+                {
+                    DisplayName = user.DisplayName,
+                    Image = null,
+                    UserName = user.UserName,
+                    Token = _tokenService.CreateToken(user)
+                };
+        }
     }
 }
