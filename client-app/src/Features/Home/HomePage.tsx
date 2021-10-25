@@ -3,10 +3,12 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Button, Grid, Header, Segment } from "semantic-ui-react";
 import { useStore } from "../../App/Stores/store";
+import LoginForm from "../Users/LoginForm";
+import RegisterForm from "../Users/RegisterForm";
 
 export default observer( function HomePage(){
 
-    const {userStore} = useStore()
+    const {userStore, modalStore} = useStore()
 
     return (
        <Segment textAlign='center' vertical className="mainHeader">
@@ -25,8 +27,10 @@ export default observer( function HomePage(){
                           <Button style={{marginTop: '2em'}} as={Link} to='/events' size='massive' color='blue'>Go to events</Button>
                           </>
                       ):(
-                        <Button style={{marginTop: '2em'}} as={Link} to='/login' size='massive' color='blue'>Login</Button>
-
+                          <>
+                        <Button style={{marginTop: '2em'}} onClick={() => modalStore.openModal(<LoginForm />)} to='/login' size='massive' color='blue'>Login</Button>
+                        <Button style={{marginTop: '2em'}} onClick={() => modalStore.openModal(<RegisterForm/>)} to='/login' size='massive' color='blue'>Register</Button>
+                        </>
                       )}
                       
                   </Grid.Column>

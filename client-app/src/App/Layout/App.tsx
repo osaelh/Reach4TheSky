@@ -14,6 +14,7 @@ import ServerError from '../../Features/errors/ServerError';
 import LoginForm from '../../Features/Users/LoginForm';
 import { useStore } from '../Stores/store';
 import LoadingComponent from './LoadingComponent';
+import ModelContainer from '../Common/Modals/ModelContainer';
 
 
 function App() {
@@ -34,6 +35,7 @@ function App() {
     
     <>
     <ToastContainer position="bottom-right" hideProgressBar></ToastContainer>
+    <ModelContainer/>
     <Route exact path='/' component={HomePage} />
     <Route
     path={'/(.+)'}

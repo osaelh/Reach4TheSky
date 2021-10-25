@@ -12,7 +12,7 @@ using Persistence;
 
 namespace API.Controllers
 {
-    [AllowAnonymous]
+    // [AllowAnonymous]
     public class Events : BaseApiController
     {
 
