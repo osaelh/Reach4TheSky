@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Domain
 {
@@ -10,5 +11,6 @@ namespace Domain
         public DateTime Date { get; set; }
         public string Region { get; set; }
         public string Categories { get; set; }
+        public ICollection<EventInterestee> Interestees { get; set; } = new List<EventInterestee>();
     }
 }
