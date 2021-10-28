@@ -27,7 +27,7 @@ namespace API.Controllers
         public async Task<IActionResult> GetEventById(Guid id)
         {
            var result = await Mediator.Send(new Details.Querry{Id= id});
-           return HandleResult<Event>(result);
+           return HandleResult<EventDto>(result);
         }
 
         [HttpPost]
