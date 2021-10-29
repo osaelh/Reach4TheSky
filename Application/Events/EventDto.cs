@@ -15,6 +15,7 @@ namespace Application.Events
         public string Region { get; set; }
         public string Categories { get; set; }
         public string HostUsername { get; set; }
+          public bool IsCancelled { get; set; }
         public ICollection<Profile> Interestees { get; set; }
     }
 }

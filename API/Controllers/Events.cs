@@ -36,6 +36,7 @@ namespace API.Controllers
             return HandleResult<Unit>(await Mediator.Send(new Create.Command{Event= Event}));
         }
 
+        [Authorize(Policy = "IsEventHost")]
         [HttpPut("{id}")]
         public async Task<IActionResult> EditEvent(Guid id, Event Event)
         {
@@ -43,10 +44,17 @@ namespace API.Controllers
             return HandleResult(await Mediator.Send(new Edit.Command{Event = Event}));
         }
 
+         [Authorize(Policy = "IsEventHost")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteEvent(Guid id)
         {
             return HandleResult(await Mediator.Send(new Delete.Command{Id= id}));
         }
+
+        [HttpPost("{id}/interest")]
+        public async Task<IActionResult> UpdateEvent(Guid id)
+        {
+            return HandleResult<Unit>(await Mediator.Send(new UpdateInterest.Command{Id = id}));
+        } 
     }
 }
