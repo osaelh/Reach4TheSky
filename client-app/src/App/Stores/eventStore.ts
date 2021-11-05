@@ -2,6 +2,7 @@ import { format } from "date-fns";
 import { makeAutoObservable, runInAction} from "mobx";
 import agent from "../Api/agent";
 import { IEvent } from "../Models/Event";
+import { store } from "./store";
 
 
 export default class EventStore{
@@ -88,6 +89,15 @@ export default class EventStore{
     }
 
     private setEvent(event: IEvent){
+      const user = store.userStore.user;
+      if(user) {
+        console.log(user.userName);
+        event.isGoing = event.interestees!.some(
+          a => a.username === user.userName
+        );
+        event.isHost = event.hostUsername === user.userName;
+        event.host = event.interestees?.find(x => x.username === event.hostUsername)
+      }
       event.date = new Date(event.date!);
       this.eventsRegistry.set(event.id, event);
     }

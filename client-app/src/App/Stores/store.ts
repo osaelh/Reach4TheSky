@@ -2,7 +2,6 @@ import { createContext, useContext } from "react";
 import commonStore from "./CommonStore";
 import eventStore from "./eventStore";
 import ModalStore from "./ModalStore";
-import ModalState from "./ModalStore";
 import UserStore from "./UserStore";
 
 interface Store{

@@ -38,7 +38,7 @@ export default observer (function EventDetailedHeader({event}: Props) {
                                 />
                                 <p>{format(event.date!, 'dd MMM yyyy') }</p>
                                 <p>
-                                    Added by <strong>Bob</strong>
+                                    Added by <strong><Link to={`/profile/${event.host?.username}`}>{event.host?.displayName}</Link></strong>
                                 </p>
                             </Item.Content>
                         </Item>
@@ -46,11 +46,15 @@ export default observer (function EventDetailedHeader({event}: Props) {
                 </Segment>
             </Segment>
             <Segment clearing attached='bottom'>
-                <Button color='teal'>Join Event</Button>
-                <Button>Cancel </Button>
-                <Button as={Link} to={`/manage/${event.id}`} color='orange' floated='right'>
-                    Manage Event
-                </Button>
+                {event.isHost ? (
+                     <Button as={Link} to={`/manage/${event.id}`} color='orange' floated='right'>
+                        Manage Event
+                     </Button>
+                ) : event.isGoing ? (
+                    <Button>Cancel </Button>
+                ) : (
+                    <Button color='teal'>Join Event</Button>
+                )}
             </Segment>
         </Segment.Group>
     )

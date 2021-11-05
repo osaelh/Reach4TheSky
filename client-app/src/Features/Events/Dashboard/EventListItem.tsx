@@ -1,13 +1,15 @@
 import { format } from "date-fns/esm";
+import { observer } from "mobx-react-lite";
 import { Link } from "react-router-dom";
-import { Button, Grid, Icon, Item, Segment } from "semantic-ui-react";
+import { Button, Grid, Icon, Item, Label, Segment } from "semantic-ui-react";
 import { IEvent } from "../../../App/Models/Event";
+import EventListItemInterestee from "./EventListItemInterestee";
 
 interface IProps {
     event : IEvent;
 }
 
-export default function EventListItem({event}: IProps){
+export default observer( function EventListItem({event}: IProps){
 
     return(
         <Segment.Group>
@@ -20,8 +22,22 @@ export default function EventListItem({event}: IProps){
                             {event.title}
                         </Item.Header>
                         <Item.Description>
-                            Created by
+                            Created by {event.host?.displayName}
                         </Item.Description>
+                        {event.isHost && (
+                            <Item.Description>
+                                <Label basic color='purple'>
+                                    You are hosting this event
+                                </Label>
+                            </Item.Description>
+                        )}
+                       {!event.isHost && event.isGoing &&(
+                            <Item.Description>
+                                <Label basic color='green'>
+                                    You are interested in this event
+                                </Label>
+                            </Item.Description>
+                        )}
                     </Item.Content>
                     </Item>
                 </Item.Group>
@@ -40,7 +56,7 @@ export default function EventListItem({event}: IProps){
                 </span>
             </Segment>
             <Segment secondary>
-            <Icon name='users'/> Interested people
+                <EventListItemInterestee interestees={event.interestees!}/>
             </Segment>
             <Segment clearing>
                 <span>
@@ -50,3 +66,4 @@ export default function EventListItem({event}: IProps){
             </Segment>
         </Segment.Group>
     )}
+)
