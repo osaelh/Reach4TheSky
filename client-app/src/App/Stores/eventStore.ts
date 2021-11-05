@@ -153,7 +153,7 @@ export default class EventStore{
        runInAction(()=>{
          if(event.id) {
            let updatedEvent = {...this.getEvent(event.id), ...event};
-           this.eventsRegistry.set(event.id, event as IEvent);
+           this.eventsRegistry.set(updatedEvent.id!, updatedEvent as IEvent);
            this.selectedEvent=event as IEvent;
          }
         //  this.events=[...this.events.filter(x=>x.id!== event.id), event];
@@ -207,6 +207,23 @@ export default class EventStore{
        console.log(error);
      } finally {
        runInAction(()=> {
+         this.loading = false;
+       })
+     }
+   }
+
+   cancelEventToggel = async () => {
+     this.loading = true;
+     try {
+       await agent.events.interest(this.selectedEvent!.id);
+       runInAction(() => {
+         this.selectedEvent!.isCancelled = !this.selectedEvent?.isCancelled;
+         this.eventsRegistry.set(this.selectedEvent!.id, this.selectedEvent!);
+       })
+     } catch (error) {
+       console.log(error);
+     } finally {
+       runInAction(() => {
          this.loading = false;
        })
      }

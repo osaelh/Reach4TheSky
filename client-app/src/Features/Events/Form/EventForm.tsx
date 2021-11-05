@@ -13,7 +13,7 @@ import MyTextArea from "../../../App/Common/Form/MyTextArea";
 import MySelectInput from "../../../App/Common/Form/MySelectInput";
 import { categoryOption } from "../../../App/Common/Options/CategoryOptions";
 import MyDateInput from "../../../App/Common/Form/MyDateInput";
-import { EventFormValues, IEvent } from "../../../App/Models/Event";
+import { EventFormValues } from "../../../App/Models/Event";
 import { v4 as uuid } from 'uuid';
 
 
@@ -26,7 +26,7 @@ export default observer( function EventForm(){
     const{updateEvent, loading,createEvent, loadEventById}= eventStore;
     const {id} = useParams<{id: string}>();
     const history = useHistory();
-    const [event, setEvent] = useState<EventFormValues>(new EventFormValues);
+    const [event, setEvent] = useState<EventFormValues>(new EventFormValues());
 
     const validationSchema = Yup.object({
         title: Yup.string().required('the title is required'),

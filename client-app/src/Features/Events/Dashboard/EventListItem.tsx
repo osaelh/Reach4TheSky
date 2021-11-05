@@ -14,9 +14,12 @@ export default observer( function EventListItem({event}: IProps){
     return(
         <Segment.Group>
             <Segment>
+                {event.isCancelled &&
+                  <Label attached='top'color='red' content='Cancelled' style={{textAlign: 'center'}}/>
+                }
                 <Item.Group>
                     <Item>
-                    <Item.Image size='tiny' circular src='/assets/user.png'></Item.Image>
+                    <Item.Image style={{marginBottom: 3}} size='tiny' circular src='/assets/user.png'></Item.Image>
                     <Item.Content>
                         <Item.Header as={Link} to={`events/${event.id}`}>
                             {event.title}
