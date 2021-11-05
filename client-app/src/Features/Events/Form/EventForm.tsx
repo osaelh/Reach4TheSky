@@ -13,7 +13,7 @@ import MyTextArea from "../../../App/Common/Form/MyTextArea";
 import MySelectInput from "../../../App/Common/Form/MySelectInput";
 import { categoryOption } from "../../../App/Common/Options/CategoryOptions";
 import MyDateInput from "../../../App/Common/Form/MyDateInput";
-import { IEvent } from "../../../App/Models/Event";
+import { EventFormValues, IEvent } from "../../../App/Models/Event";
 import { v4 as uuid } from 'uuid';
 
 
@@ -26,14 +26,7 @@ export default observer( function EventForm(){
     const{updateEvent, loading,createEvent, loadEventById}= eventStore;
     const {id} = useParams<{id: string}>();
     const history = useHistory();
-    const [event, setEvent] = useState<IEvent>({
-        id:'',
-        title:'',
-        description:'',
-        date: null,
-        region:'',
-        categories: ''
-    });
+    const [event, setEvent] = useState<EventFormValues>(new EventFormValues);
 
     const validationSchema = Yup.object({
         title: Yup.string().required('the title is required'),
@@ -45,7 +38,7 @@ export default observer( function EventForm(){
 
     useEffect(()=>{
         if (id) {
-            loadEventById(id).then(event => setEvent(event!))
+            loadEventById(id).then(event => setEvent(new EventFormValues(event)))
         }
     },[id, loadEventById])
 
@@ -59,13 +52,15 @@ export default observer( function EventForm(){
     // }
 
 
-    function handleFormSubmit(event: IEvent){
+    function handleFormSubmit(event: EventFormValues){
         console.log(event);
-        if (event.id.length === 0) {
-            let newEvent = {
-                ...event,
-                id: uuid()
-            }
+        if (!event.id) {
+            // let newEvent = {
+            //     ...event,
+            //     id : uuid()
+            // }
+            let newEvent = event;
+            newEvent.id = uuid();
             createEvent(newEvent).then(()=> history.push(`/events/${event.id}`));
         } else {
             updateEvent(event).then(()=> history.push(`/events/${event.id}`));
@@ -105,7 +100,7 @@ export default observer( function EventForm(){
               
                                   <Button
                                    disabled={isSubmitting || !dirty || !isValid}
-                                   loading={loading}
+                                   loading={isSubmitting}
                                    floated='right' positive type='submit' content='Submit'
                                    
                                   />

@@ -4,6 +4,7 @@ import React from 'react'
 import { Link } from 'react-router-dom';
 import {Button, Header, Item, Segment, Image} from 'semantic-ui-react'
 import { IEvent } from '../../../App/Models/Event';
+import { useStore } from '../../../App/Stores/store';
 
 const eventImageStyle = {
     filter: 'brightness(30%)'
@@ -23,6 +24,8 @@ interface Props {
 }
 
 export default observer (function EventDetailedHeader({event}: Props) {
+    const {eventStore : {updateInterest, loading}} = useStore();
+
     return (
         <Segment.Group>
             <Segment basic attached='top' style={{padding: '0'}}>
@@ -51,9 +54,9 @@ export default observer (function EventDetailedHeader({event}: Props) {
                         Manage Event
                      </Button>
                 ) : event.isGoing ? (
-                    <Button>Cancel </Button>
+                    <Button loading={loading} onClick={updateInterest}>Cancel </Button>
                 ) : (
-                    <Button color='teal'>Join Event</Button>
+                    <Button loading={loading} onClick={updateInterest} color='teal'>Join Event</Button>
                 )}
             </Segment>
         </Segment.Group>

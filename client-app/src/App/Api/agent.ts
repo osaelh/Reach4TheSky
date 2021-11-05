@@ -1,7 +1,7 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { toast } from "react-toastify";
 import { History } from "../..";
-import { IEvent } from "../Models/Event";
+import { EventFormValues, IEvent } from "../Models/Event";
 import { User, UserFormValues } from "../Models/User";
 import { store } from "../Stores/store";
 
@@ -76,10 +76,10 @@ const requests = {
 const events = {
     list: ()=> requests.get<IEvent[]>('/Events'),
     details: (id: string) => requests.get<IEvent>(`/Events/${id}`),
-    create: (event: IEvent) => requests.post<void>(`/Events`,event),
-    update: (event: IEvent) => requests.put<void>(`/Events/${event.id}`, event),
-    delete: (id: string) => requests.delete<void>(`/Events/${id}`)
-
+    create: (event: EventFormValues) => requests.post<void>(`/Events`,event),
+    update: (event: EventFormValues) => requests.put<void>(`/Events/${event.id}`, event),
+    delete: (id: string) => requests.delete<void>(`/Events/${id}`),
+    interest: (id: string) => requests.post<void>(`/Events/${id}/interest`, {})
 }
 
 const accounts = {
