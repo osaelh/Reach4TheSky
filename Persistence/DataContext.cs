@@ -13,6 +13,7 @@ namespace Persistence
         public DbSet<Event> Events { get; set; }
 
         public DbSet<EventInterestee> EventInterestees {get;set;}
+         public DbSet<Photo> Photos {get;set;}
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
