@@ -12,10 +12,14 @@ namespace Application.Core
             CreateMap<Event, Event>();
             CreateMap<Event, EventDto>()
             .ForMember(d => d.HostUsername, o => o.MapFrom(s => s.Interestees.FirstOrDefault(x => x.IsHost).User.UserName));
-            CreateMap<EventInterestee, Profiles.Profile>()
+            CreateMap<EventInterestee, InteresteeDto>()
               .ForMember(d => d.DisplayName, o => o.MapFrom(s => s.User.DisplayName))
               .ForMember(d => d.Username, o => o.MapFrom(s => s.User.UserName))
-              .ForMember(d => d.Bio, o => o.MapFrom(s => s.User.Bio));
+              .ForMember(d => d.Bio, o => o.MapFrom(s => s.User.Bio))
+              .ForMember(d => d.Image, o => o.MapFrom(s => s.User.Photos.FirstOrDefault(p => p.IsMain).Url));
+
+            CreateMap<User, Profiles.Profile>()
+            .ForMember(d => d.Image, o => o.MapFrom(s => s.Photos.FirstOrDefault(p => p.IsMain).Url));
         }
     }
 }
