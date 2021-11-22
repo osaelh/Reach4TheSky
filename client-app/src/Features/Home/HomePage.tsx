@@ -15,7 +15,7 @@ export default observer( function HomePage(){
            {/* <Container> */}
               <Grid >
                   <Grid.Column width={'5'} >
-                      <img style={{marginLeft: '50px',height:"400px"}} alt='counting stars img'  src='/assets/counting-stars.svg'></img>
+                      <img  alt='counting stars img'  src='/assets/counting-stars.svg'></img>
                   </Grid.Column>
                   <Grid.Column width={'6'} >
                       <Header as='h1' content='Reach for the sky'/>
@@ -35,7 +35,7 @@ export default observer( function HomePage(){
                       
                   </Grid.Column>
                   <Grid.Column width={'5'} >
-                      <img style={{marginRight: '50px',height:"400px"}} alt='space img'  src='/assets/space.svg'></img>
+                      <img   alt='space img'  src='/assets/space.svg'></img>
                   </Grid.Column>
               </Grid>
            {/* </Container> */}

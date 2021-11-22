@@ -36,8 +36,11 @@ body{
   background-image: linear-gradient(62deg, #8EC5FC 36%, #E0C3FC 99%) !important; */
   background-color: #fdf8f8 !important;
   background-image: linear-gradient(315deg, #fdf8f8 0%, #E0C3FC 49%, #6dc1f5 100%) !important;
-
   height: 100vh;
   display: flex;
   align-items: center;
+}
+
+.mainHeader img {
+  width: 90%;
 }

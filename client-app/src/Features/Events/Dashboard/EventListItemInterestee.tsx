@@ -14,7 +14,7 @@ export default observer(function EventListItemInterestee({interestees}: Props) {
         <List horizontal>
            {interestees.map(interestee => (
                 <Popup hoverable key={interestee.username} trigger={
-                    <List.Item key={interestee.username} as={Link} to={`/profile/${interestee.username}`}>
+                    <List.Item key={interestee.username} as={Link} to={`/profiles/${interestee.username}`}>
                        <Image size="mini" circular src={interestee.image || 'assets/user.png'}/>
                     </List.Item>
                 }>

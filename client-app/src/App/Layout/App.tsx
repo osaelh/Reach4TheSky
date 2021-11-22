@@ -15,6 +15,7 @@ import LoginForm from '../../Features/Users/LoginForm';
 import { useStore } from '../Stores/store';
 import LoadingComponent from './LoadingComponent';
 import ModelContainer from '../Common/Modals/ModelContainer';
+import ProfilePage from '../../Features/Profiles/ProfilePage';
 
 
 function App() {
@@ -47,6 +48,7 @@ function App() {
       <Route exact path='/events' component={EventDashboard} />
       <Route path='/events/:id' component={EventDetails} />
       <Route key={location.key} path={['/createEvent','/manage/:id']} component={EventForm} />
+      <Route path='/Profiles/:username' component={ProfilePage}/>
       <Route path='/errors' component={TestErrors}/>
       <Route path='/server-error' component={ServerError}/>
       <Route path='/login' component={LoginForm}/>

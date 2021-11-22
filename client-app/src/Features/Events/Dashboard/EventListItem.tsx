@@ -19,13 +19,14 @@ export default observer( function EventListItem({event}: IProps){
                 }
                 <Item.Group>
                     <Item>
-                    <Item.Image style={{marginBottom: 3}} size='tiny' circular src='/assets/user.png'></Item.Image>
+                    <Item.Image style={{marginBottom: 3}} size='tiny' circular src={event.host?.image || '/assets/user.png'}></Item.Image>
                     <Item.Content>
                         <Item.Header as={Link} to={`events/${event.id}`}>
                             {event.title}
                         </Item.Header>
                         <Item.Description>
-                            Created by {event.host?.displayName}
+                            {/* Created by {event.host?.displayName} */}
+                            <Link to={`profiles/${event.hostUsername}`}>{event.host?.displayName}</Link>
                         </Item.Description>
                         {event.isHost && (
                             <Item.Description>
