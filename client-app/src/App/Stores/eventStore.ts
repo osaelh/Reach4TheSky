@@ -229,4 +229,8 @@ export default class EventStore{
      }
    }
 
+   clearSelectedEvent = () => {
+     this.selectedEvent = undefined;
+   }
+
 }

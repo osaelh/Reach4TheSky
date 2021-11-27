@@ -1,4 +1,5 @@
 import { createContext, useContext } from "react";
+import CommentStore from "./CommentStore";
 import commonStore from "./CommonStore";
 import eventStore from "./eventStore";
 import ModalStore from "./ModalStore";
@@ -10,7 +11,8 @@ interface Store{
     commonStore: commonStore,
     userStore: UserStore,
     modalStore: ModalStore,
-    profileStore: ProfileStore
+    profileStore: ProfileStore,
+    commentStore: CommentStore
 }
 
 export const store : Store = {
@@ -18,7 +20,8 @@ export const store : Store = {
     commonStore: new commonStore(),
     userStore: new UserStore(),
     modalStore : new ModalStore(),
-    profileStore: new ProfileStore()
+    profileStore: new ProfileStore(),
+    commentStore: new CommentStore()
 }
 
 export const eventContext = createContext(store);

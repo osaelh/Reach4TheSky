@@ -13,5 +13,6 @@ namespace Domain
         public string Categories { get; set; }
         public bool IsCancelled { get; set; }
         public ICollection<EventInterestee> Interestees { get; set; } = new List<EventInterestee>();
+        public ICollection<Comment> Comments { get; set; } = new List<Comment>();
     }
 }

@@ -1,8 +1,29 @@
-import { observer } from 'mobx-react-lite'
-import React from 'react'
-import {Segment, Header, Comment, Form, Button} from 'semantic-ui-react'
+import { Formik, Form, Field, FieldProps } from 'formik';
+import { observer } from 'mobx-react-lite';
+import React, { useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { Segment, Header, Comment, Button, Loader } from 'semantic-ui-react';
+import MyTextArea from '../../../App/Common/Form/MyTextArea';
+import { useStore } from '../../../App/Stores/store';
+import * as Yup from 'yup';
+import formatDistanceToNow from 'date-fns/formatDistanceToNow'
 
-export default observer(function ActivityDetailedChat() {
+interface Props {
+    eventId: string;
+}
+
+export default observer(function ActivityDetailedChat({ eventId }: Props) {
+
+    const { commentStore } = useStore();
+    useEffect(() => {
+        if (eventId) {
+            commentStore.createHubConnection(eventId);
+        }
+        return () => {
+            commentStore.clearComment()
+        }
+    }, [commentStore, eventId])
+
     return (
         <>
             <Segment
@@ -14,45 +35,52 @@ export default observer(function ActivityDetailedChat() {
             >
                 <Header>Chat about this event</Header>
             </Segment>
-            <Segment attached>
+            <Segment attached clearing>
+            <Formik
+                        onSubmit={(values, { resetForm }) => commentStore.addComment(values).then(() => resetForm())}
+                        initialValues={{ body: "" }}
+                        validationSchema={Yup.object({
+                            body: Yup.string().required()
+                        })}                   >
+                        {({ isSubmitting, isValid, handleSubmit }) => (
+                            <Form className="ui form">
+                                <Field name='body'>
+                                    {(props: FieldProps) => (
+                                        <div>
+                                            <Loader active={isSubmitting}/>
+                                                <textarea
+                                                    placeholder='Enter to submit your comment, Enter + shift for new line'
+                                                    rows={2}
+                                                    {...props.field}
+                                                    onKeyPress={e => {
+                                                        if (e.key === 'Enter' && e.shiftKey) {
+                                                            return;
+                                                        }
+                                                        if (e.key === 'Enter' && !e.shiftKey) {
+                                                            e.preventDefault();
+                                                            isValid && handleSubmit();
+                                                        }
+                                                    }}
+                                                />                                    
+                                        </div>
+                                        )}
+                                </Field>
+                            </Form>
+                              )}
+                          </Formik>
                 <Comment.Group>
-                    <Comment>
-                        <Comment.Avatar src='/assets/user.png'/>
-                        <Comment.Content>
-                            <Comment.Author as='a'>Matt</Comment.Author>
-                            <Comment.Metadata>
-                                <div>Today at 5:42PM</div>
-                            </Comment.Metadata>
-                            <Comment.Text>How artistic!</Comment.Text>
-                            <Comment.Actions>
-                                <Comment.Action>Reply</Comment.Action>
-                            </Comment.Actions>
-                        </Comment.Content>
-                    </Comment>
-
-                    <Comment>
-                        <Comment.Avatar src='/assets/user.png'/>
-                        <Comment.Content>
-                            <Comment.Author as='a'>Joe Henderson</Comment.Author>
-                            <Comment.Metadata>
-                                <div>5 days ago</div>
-                            </Comment.Metadata>
-                            <Comment.Text>Dude, this is awesome. Thanks so much</Comment.Text>
-                            <Comment.Actions>
-                                <Comment.Action>Reply</Comment.Action>
-                            </Comment.Actions>
-                        </Comment.Content>
-                    </Comment>
-
-                    <Form reply>
-                        <Form.TextArea/>
-                        <Button
-                            content='Add Reply'
-                            labelPosition='left'
-                            icon='edit'
-                            primary
-                        />
-                    </Form>
+                    {commentStore.comments.map(comment => (
+                        <Comment key={comment.id}>
+                            <Comment.Avatar src={comment.image || '/assets/user.png'} />
+                            <Comment.Content>
+                                <Comment.Author as={Link} to={`/profiles/${comment.username}`}>{comment.displayName}</Comment.Author>
+                                <Comment.Metadata>
+                                    <div>{formatDistanceToNow(new Date(comment.createdAt))}</div>
+                                </Comment.Metadata>
+                                <Comment.Text style={{whiteSpace: 'pre-wrap'}}>{comment.body}</Comment.Text>
+                            </Comment.Content>
+                        </Comment>
+                        ))}
                 </Comment.Group>
             </Segment>
         </>

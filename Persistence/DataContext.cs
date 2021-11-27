@@ -11,9 +11,11 @@ namespace Persistence
         }
 
         public DbSet<Event> Events { get; set; }
+        public DbSet<EventInterestee> EventInterestees { get; set; }
+        public DbSet<Photo> Photos { get ; set; }
+        public DbSet<Comment> Comments { get; set; }
 
-        public DbSet<EventInterestee> EventInterestees {get;set;}
-         public DbSet<Photo> Photos {get;set;}
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -31,6 +33,11 @@ namespace Persistence
                 .HasOne(a => a.Event)
                 .WithMany(u => u.Interestees)
                 .HasForeignKey(a => a.EventId);
+
+            builder.Entity<Comment>()
+                 .HasOne(e => e.Event)
+                 .WithMany(c => c.Comments)
+                 .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
