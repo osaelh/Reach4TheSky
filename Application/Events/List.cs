@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Core;
@@ -13,9 +14,12 @@ namespace Application.Events
 {
     public class List
     {
-        public class Querry : IRequest<Result<List<EventDto>>> { }
+        public class Querry : IRequest<Result<PagedList<EventDto>>> 
+        {
+            public PagingParams Params { get; set; }
+        }
 
-        public class Handler : IRequestHandler<Querry, Result<List<EventDto>>>
+        public class Handler : IRequestHandler<Querry, Result<PagedList<EventDto>>>
         {
             private readonly DataContext _dataContext;
             private readonly IMapper _mapper;
@@ -25,13 +29,17 @@ namespace Application.Events
                 _dataContext = dataContext;
             }
 
-            public async Task<Result<List<EventDto>>> Handle(Querry request, CancellationToken cancellationToken)
+            public async Task<Result<PagedList<EventDto>>> Handle(Querry request, CancellationToken cancellationToken)
             {
-                var events = await _dataContext.Events
-                .ProjectTo<EventDto>(_mapper.ConfigurationProvider)
-                .ToListAsync(cancellationToken);
+                var querry = _dataContext.Events
+                .OrderBy(d => d.Date)
 
-                return Result<List<EventDto>>.Success(events);
+                .ProjectTo<EventDto>(_mapper.ConfigurationProvider)
+                .AsQueryable();
+
+                return Result<PagedList<EventDto>>.Success(
+                    await PagedList<EventDto>.CreateAsync(querry, request.Params.PageNumber, request.Params.PageSize)
+                );
             }
         }
     }

@@ -17,9 +17,9 @@ namespace API.Controllers
     {
 
         [HttpGet]
-        public async Task<IActionResult> GetEvents()
+        public async Task<IActionResult> GetEvents([FromQuery]PagingParams param)
         {
-            return HandleResult(await Mediator.Send(new List.Querry()));
+            return HandlePagedResult(await Mediator.Send(new List.Querry{Params = param}));
         }   
 
         [Authorize]
