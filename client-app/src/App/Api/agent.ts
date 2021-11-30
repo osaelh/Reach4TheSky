@@ -2,6 +2,7 @@ import axios, { AxiosError, AxiosResponse } from "axios";
 import { toast } from "react-toastify";
 import { History } from "../..";
 import { EventFormValues, IEvent } from "../Models/Event";
+import { PaginatedResult } from "../Models/Pagination";
 import { Photo, Profile } from "../Models/Profile";
 import { User, UserFormValues } from "../Models/User";
 import { store } from "../Stores/store";
@@ -20,6 +21,11 @@ axios.interceptors.request.use(config => {
 
 axios.interceptors.response.use(async response=>{
         await sleep(1000);
+        const pagination = response.headers["pagination"];
+        if(pagination) {
+            response.data = new PaginatedResult(JSON.parse(pagination), response.data);
+            return response as AxiosResponse<PaginatedResult<any>>
+        }
         return response;
 },(error: AxiosError)=>{
     const {data, status,config} = error.response!;
@@ -75,7 +81,7 @@ const requests = {
 }
 
 const events = {
-    list: ()=> requests.get<IEvent[]>('/Events'),
+    list: (params: URLSearchParams)=> axios.get<PaginatedResult<IEvent[]>>('/Events', {params}).then(responseBody),
     details: (id: string) => requests.get<IEvent>(`/Events/${id}`),
     create: (event: EventFormValues) => requests.post<void>(`/Events`,event),
     update: (event: EventFormValues) => requests.put<void>(`/Events/${event.id}`, event),

@@ -1,7 +1,8 @@
 import { format } from "date-fns";
-import { makeAutoObservable, runInAction} from "mobx";
+import { makeAutoObservable, reaction, runInAction} from "mobx";
 import agent from "../Api/agent";
 import { EventFormValues, IEvent } from "../Models/Event";
+import Pagination, { PagingParams } from "../Models/Pagination";
 import { Profile } from "../Models/Profile";
 import { store } from "./store";
 
@@ -13,9 +14,66 @@ export default class EventStore{
     editMode = false;
     loading =false;
     loadingInitial= true;
+    pagination: Pagination | null = null;
+    pagingParams: PagingParams = new PagingParams();
+    predicate = new Map().set('all', true)
 
     constructor(){
         makeAutoObservable(this)
+
+        reaction(() => this.predicate.keys(),
+        () => {
+          this.pagingParams = new PagingParams();
+          console.log(this.pagingParams)
+          this.eventsRegistry.clear();
+          this.loadEvents();
+        })
+    }
+
+    setPagingParams = (pagingParams: PagingParams) => {
+      this.pagingParams = pagingParams;
+    }
+
+    setPredicate = (predicate: string , value: string | Date) => {
+      const resetPredicate = () => {
+        this.predicate.forEach((value, key) => {
+          // console.log(key);
+          if(key !== 'startAt') this.predicate.delete(key);
+        })
+      }
+      switch(predicate) {
+        case 'all':
+          resetPredicate();
+          this.predicate.set('all' , true);
+          break;
+        case 'isGoing':
+          resetPredicate();
+          this.predicate.set('isGoing', true);
+          break;
+        case 'isHost':
+          resetPredicate();
+          this.predicate.set('isHost', true);
+          break;
+        case 'startDate':
+          this.predicate.delete('startAt');
+          this.predicate.set('startAt', value);
+
+      }
+    }
+
+    get axiosParams() {
+      const params = new URLSearchParams();
+      params.append('pageNumber', this.pagingParams.pageNumber.toString());
+      params.append('pageSize', this.pagingParams.pageSize.toString());
+      this.predicate.forEach((value, key) => {
+        if(key === "startAt") {
+          console.log(value);
+          params.append(key, (value as Date).toISOString());
+        } else {
+          params.append(key, value);
+        }
+      })
+      return params
     }
 
     get eventsByDate(){
@@ -43,22 +101,26 @@ export default class EventStore{
     loadEvents = async ()=>{
       this.setLoadingInitial(true);
       try {
-        const events = await agent.events.list();
+        const events = await agent.events.list(this.axiosParams);
 
-            events.forEach(event=> {
+            events.data.forEach(event=> {
                 this.setEvent(event);
                 // this.events.push(event);
                 runInAction(()=>{
                   this.eventsRegistry.set(event.id, event);
                 });
               }) ;
-
+              this.setPagination(events.pagination);
               this.setLoadingInitial(false);
 
       } catch (error) {
           console.log(error);
           this.setLoadingInitial(false);
       }
+    }
+
+    setPagination(pagination: Pagination) {
+      this.pagination = pagination;
     }
 
     loadEventById = async (id : string)=>{
