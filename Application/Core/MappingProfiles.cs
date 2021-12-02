@@ -26,6 +26,14 @@ namespace Application.Core
               .ForMember(d => d.DisplayName, o => o.MapFrom(s => s.Author.DisplayName))
               .ForMember(d => d.Username, o => o.MapFrom(s => s.Author.UserName))
               .ForMember(d => d.Image, o => o.MapFrom(s => s.Author.Photos.FirstOrDefault(p => p.IsMain).Url));
+            
+
+            CreateMap<EventInterestee, Profiles.UserEventDto>()
+              .ForMember(i => i.Id, o => o.MapFrom(s => s.Event.Id))
+              .ForMember(d => d.Title, o => o.MapFrom(s => s.Event.Title))
+              .ForMember(d => d.Category, o => o.MapFrom(s => s.Event.Categories))
+              .ForMember(d => d.Date, o => o.MapFrom(s => s.Event.Date))
+              .ForMember(d => d.HostUsername, o => o.MapFrom(s => s.Event.Interestees.FirstOrDefault(x => x.IsHost).User.UserName));
               
         }
     }

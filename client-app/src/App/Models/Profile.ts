@@ -22,3 +22,10 @@ export interface Photo {
     url: string;
     isMain: boolean;
 }
+
+export interface UserEvent {
+    id: string;
+    title: string;
+    category: string;
+    date: Date;
+}

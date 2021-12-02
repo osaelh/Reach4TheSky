@@ -1,6 +1,6 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import agent from "../Api/agent";
-import { Photo, Profile } from "../Models/Profile";
+import { Photo, Profile, UserEvent } from "../Models/Profile";
 import { store } from "./store";
 
 export default class ProfileStore {
@@ -8,6 +8,8 @@ export default class ProfileStore {
     loadingProfile: boolean = false;
     uploading: boolean = false;
     loading: boolean = false;
+    userEvents: UserEvent[] = [];
+    loadingEvents: boolean = false;
 
     constructor() {
         makeAutoObservable(this);
@@ -92,6 +94,38 @@ export default class ProfileStore {
         } catch (error) {
             console.log(error);
             runInAction(() => this.loading = false)
+        }
+    }
+
+    loadUserEvents = async (username: string, predicate?: string) => {
+        this.loadingEvents = true;
+        try {
+            const events = await agent.profiles.listEvents(username, predicate!);
+            runInAction(()=> {
+                this.userEvents = events;
+                this.loadingEvents = false;
+            })
+        } catch (error) {
+            console.log(error);
+            runInAction(() => {
+                this.loadingEvents = false;
+            })
+        }
+    }
+
+    loadAllUserEvents = async (username: string) => {
+        this.loadingEvents = true;
+        try {
+            const events = await agent.profiles.listAllEvents(username)
+            runInAction(()=> {
+                this.userEvents = events;
+                this.loadingEvents = false;
+            })
+        } catch (error) {
+            console.log(error);
+            runInAction(() => {
+                this.loadingEvents = false;
+            })
         }
     }
 }
