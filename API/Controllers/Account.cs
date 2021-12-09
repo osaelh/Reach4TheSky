@@ -31,7 +31,7 @@ namespace API.Controllers
             _signInManager = signInManager;
             _userManager = userManager;
         }
-
+        [AllowAnonymous]
         [HttpPost("login")]
         public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
         {
