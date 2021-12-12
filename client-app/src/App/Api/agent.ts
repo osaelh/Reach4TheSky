@@ -107,7 +107,8 @@ const profiles = {
     setMainPhoto: (id: string) => requests.post(`/photos/${id}/setmain`, {}),
     deletePhoto: (id: string) => requests.delete(`/photos/${id}`),
     listEvents: (username: string, predicate: string) => requests.get<UserEvent[]>(`/profiles/${username}/events?predicate=${predicate}`),
-    listAllEvents: (username: string) => requests.get<UserEvent[]>(`/profiles/${username}/events`)
+    listAllEvents: (username: string) => requests.get<UserEvent[]>(`/profiles/${username}/events`),
+    updateProfile: (profile: Partial<Profile>) => requests.put(`/profiles`, profile)
 }
 
 const agent = {

@@ -19,5 +19,11 @@ namespace API.Controllers
         {
             return HandleResult(await Mediator.Send(new ListEvents.Querry{Username = username, Predicate = predicate}));
         }
+
+        [HttpPut]
+        public async Task<IActionResult> Update(Update.Command command)
+        {
+            return HandleResult(await Mediator.Send(command));
+        }
     }
 }
