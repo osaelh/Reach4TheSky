@@ -10,12 +10,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
-<<<<<<< HEAD
-=======
 using Microsoft.Extensions.Configuration;
 using System.Net.Http;
 using Newtonsoft.Json;
->>>>>>> FbLogin
 
 namespace API.Controllers
 {
@@ -26,18 +23,6 @@ namespace API.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
-<<<<<<< HEAD
-
-        private readonly TokenService _tokenService;
-        public Account(UserManager<User> userManager,
-         SignInManager<User> signInManager,
-
-         TokenService tokenService)
-        {
-            _tokenService = tokenService;
-            _signInManager = signInManager;
-            _userManager = userManager;
-=======
         private readonly IConfiguration _configuration;
 
         private readonly TokenService _tokenService;
@@ -55,7 +40,6 @@ namespace API.Controllers
             {
                 BaseAddress = new System.Uri("https://graph.facebook.com")
             };
->>>>>>> FbLogin
         }
         [AllowAnonymous]
         [HttpPost("login")]
@@ -132,8 +116,6 @@ namespace API.Controllers
                     Token = _tokenService.CreateToken(user)
                 };
         }
-<<<<<<< HEAD
-=======
         
         [HttpPost("fbLogin")]
         public async Task<ActionResult<UserDto>> FacebookLogin(string accessToken)
@@ -197,6 +179,5 @@ namespace API.Controllers
                 };
 
         }
->>>>>>> FbLogin
     }
 }
