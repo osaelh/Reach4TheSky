@@ -2,7 +2,10 @@
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
 import {Grid, Loader } from "semantic-ui-react";
+<<<<<<< HEAD
 import LoadingComponent from "../../../App/Layout/LoadingComponent";
+=======
+>>>>>>> FbLogin
 import { PagingParams } from "../../../App/Models/Pagination";
 import { useStore } from "../../../App/Stores/store";
 import EventFilter from "./EventFilter";

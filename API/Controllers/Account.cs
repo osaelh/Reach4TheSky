@@ -10,6 +10,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+<<<<<<< HEAD
+=======
+using Microsoft.Extensions.Configuration;
+using System.Net.Http;
+using Newtonsoft.Json;
+>>>>>>> FbLogin
 
 namespace API.Controllers
 {
@@ -20,6 +26,7 @@ namespace API.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
+<<<<<<< HEAD
 
         private readonly TokenService _tokenService;
         public Account(UserManager<User> userManager,
@@ -30,6 +37,25 @@ namespace API.Controllers
             _tokenService = tokenService;
             _signInManager = signInManager;
             _userManager = userManager;
+=======
+        private readonly IConfiguration _configuration;
+
+        private readonly TokenService _tokenService;
+        private readonly HttpClient _httpClient;
+        public Account(UserManager<User> userManager,
+         SignInManager<User> signInManager,
+         IConfiguration configuration,
+         TokenService tokenService)
+        {
+            _configuration = configuration;
+            _tokenService = tokenService;
+            _signInManager = signInManager;
+            _userManager = userManager;
+            _httpClient = new HttpClient 
+            {
+                BaseAddress = new System.Uri("https://graph.facebook.com")
+            };
+>>>>>>> FbLogin
         }
         [AllowAnonymous]
         [HttpPost("login")]
@@ -106,5 +132,71 @@ namespace API.Controllers
                     Token = _tokenService.CreateToken(user)
                 };
         }
+<<<<<<< HEAD
+=======
+        
+        [HttpPost("fbLogin")]
+        public async Task<ActionResult<UserDto>> FacebookLogin(string accessToken)
+        {
+            var fbVerifyKeys = _configuration["Facebook:AppId"] + "|" + _configuration["Facebook:AppSecret"];
+
+            var verifyToken = await _httpClient.GetAsync($"debug_token?input_token={accessToken}&access_token={fbVerifyKeys}");
+
+            if(!verifyToken.IsSuccessStatusCode) return Unauthorized();
+;
+            var fbUrl = $"me?access_token={accessToken}&fields=name,email,picture.width(100).height(100)";
+
+            var response = await _httpClient.GetAsync(fbUrl);
+
+            if(!response.IsSuccessStatusCode) return Unauthorized();
+
+            var content = await response.Content.ReadAsStringAsync();
+
+            var fbInfo = JsonConvert.DeserializeObject<dynamic>(content);
+
+            var username = (string)fbInfo.id;
+
+            var user = await _userManager.Users.Include(p => p.Photos).FirstOrDefaultAsync(x => x.UserName == username);
+
+            if(user != null) {
+                return  new UserDto 
+                {
+                    DisplayName = user.DisplayName,
+                    Image = user?.Photos?.FirstOrDefault(x => x.IsMain)?.Url,
+                    UserName = user.UserName,
+                    Token = _tokenService.CreateToken(user)
+                };
+            }
+
+            user =  new User
+            {
+                DisplayName = (string) fbInfo.name,
+                Email = (string)fbInfo.email,
+                UserName = (string)fbInfo.id,
+                Photos = new List<Photo> 
+                {
+                    new Photo 
+                    {
+                        Id = "fb_" + (string)fbInfo.id,
+                        Url = (string)fbInfo.picture.data.url,
+                        IsMain = true
+                    }
+                }
+            };
+
+            var result = await _userManager.CreateAsync(user);
+
+            if(!result.Succeeded) return BadRequest("Problem creating user account");
+
+            return  new UserDto 
+                {
+                    DisplayName = user.DisplayName,
+                    Image = user?.Photos?.FirstOrDefault(x => x.IsMain)?.Url,
+                    UserName = user.UserName,
+                    Token = _tokenService.CreateToken(user)
+                };
+
+        }
+>>>>>>> FbLogin
     }
 }

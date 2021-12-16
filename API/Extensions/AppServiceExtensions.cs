@@ -66,7 +66,11 @@ namespace API.Extensions
             {
                 opt.AddPolicy("CorsPolicy", policy =>
                 {
+<<<<<<< HEAD
                     policy.AllowAnyMethod().AllowAnyHeader().WithOrigins("http://localhost:3000").AllowCredentials();
+=======
+                    policy.AllowAnyMethod().AllowAnyHeader().WithOrigins("https://localhost:3000").AllowCredentials();
+>>>>>>> FbLogin
                 });
             });
 
