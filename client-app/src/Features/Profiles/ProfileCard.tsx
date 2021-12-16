@@ -10,7 +10,7 @@ interface Props {
 export default observer( function ProfileCard({profile}: Props) {
     function truncate(str: string | undefined) {
         if (str) {
-        return str.length > 50 ? str.substring(0, 37) + '...' : str;
+        return str.length > 30 ? str.substring(0, 37) + '...' : str;
         }
         }
     return (
