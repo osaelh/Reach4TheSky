@@ -92,12 +92,8 @@ const events = {
 const accounts = {
     current: () => requests.get<User>(`/account`),
     login: (user: UserFormValues) => requests.post<User>('/account/login', user),
-<<<<<<< HEAD
-    register: (user: UserFormValues) => requests.post<User>('/account/register', user)
-=======
     register: (user: UserFormValues) => requests.post<User>('/account/register', user),
     fbLogin: (accessToken: string) => requests.post<User>(`/account/fbLogin?accessToken=${accessToken}`, {})
->>>>>>> FbLogin
 }
 
 const profiles = {

@@ -1,11 +1,7 @@
 import { observer } from "mobx-react-lite";
 import React from "react";
 import { Link } from "react-router-dom";
-<<<<<<< HEAD
-import { Button, Grid, Header, Segment } from "semantic-ui-react";
-=======
 import { Button, Divider, Grid, Header, Segment } from "semantic-ui-react";
->>>>>>> FbLogin
 import { useStore } from "../../App/Stores/store";
 import LoginForm from "../Users/LoginForm";
 import RegisterForm from "../Users/RegisterForm";
@@ -34,13 +30,10 @@ export default observer( function HomePage(){
                           <>
                         <Button style={{marginTop: '2em'}} onClick={() => modalStore.openModal(<LoginForm />)} to='/login' size='massive' color='blue'>Login</Button>
                         <Button style={{marginTop: '2em'}} onClick={() => modalStore.openModal(<RegisterForm/>)} to='/login' size='massive' color='blue'>Register</Button>
-<<<<<<< HEAD
-=======
                         <Divider horizontal inverted>
                             Or
                         </Divider>
                         <Button loading={userStore.fbLoading} size="huge" content="Login With Facebook" inverted color="facebook" onClick={userStore.facebookLogin}/>
->>>>>>> FbLogin
                         </>
                       )}
                       

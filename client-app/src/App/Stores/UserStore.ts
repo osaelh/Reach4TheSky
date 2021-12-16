@@ -6,11 +6,8 @@ import { store } from "./store";
 
 export default class UserStore {
     user: User | null = null;
-<<<<<<< HEAD
-=======
     fbAccessToken: string | null = null;
     fbLoading = false;
->>>>>>> FbLogin
 
     constructor(){
         makeAutoObservable(this);
@@ -80,8 +77,6 @@ export default class UserStore {
             this.user.displayName = displayName;
         }
     }
-<<<<<<< HEAD
-=======
 
     getfacebookLoginStatus = async () => {
         window.FB.getLoginStatus(response => {
@@ -140,5 +135,4 @@ export default class UserStore {
             }, {scope: 'public_profile,email'})
         }
     }
->>>>>>> FbLogin
 }
