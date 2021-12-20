@@ -44,7 +44,7 @@ namespace API.Controllers
             return HandleResult(await Mediator.Send(new Edit.Command{Event = Event}));
         }
 
-         [Authorize(Policy = "IsEventHost")]
+        [Authorize(Policy = "IsEventHost")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteEvent(Guid id)
         {
