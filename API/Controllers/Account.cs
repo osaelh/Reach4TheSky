@@ -13,10 +13,10 @@ using System.Security.Claims;
 using Microsoft.Extensions.Configuration;
 using System.Net.Http;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Http;
 
 namespace API.Controllers
 {
-    [AllowAnonymous]
     [ApiController]
     [Route("/api/[Controller]")]
     public class Account : ControllerBase
@@ -54,6 +54,8 @@ namespace API.Controllers
             var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
             if(result.Succeeded)
             {
+                await SetRefreshToken(user);
+
                 return new UserDto
                 {
                     DisplayName= user.DisplayName,
@@ -65,6 +67,7 @@ namespace API.Controllers
             return Unauthorized();
         } 
 
+        [AllowAnonymous]
         [HttpPost("register")]
         public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
         {
@@ -90,6 +93,8 @@ namespace API.Controllers
 
             if(result.Succeeded)
             {
+                await SetRefreshToken(user);
+
                 return new UserDto 
                 {
                     DisplayName = user.DisplayName,
@@ -117,6 +122,7 @@ namespace API.Controllers
                 };
         }
         
+        [AllowAnonymous]
         [HttpPost("fbLogin")]
         public async Task<ActionResult<UserDto>> FacebookLogin(string accessToken)
         {
@@ -170,6 +176,8 @@ namespace API.Controllers
 
             if(!result.Succeeded) return BadRequest("Problem creating user account");
 
+            await SetRefreshToken(user);
+
             return  new UserDto 
                 {
                     DisplayName = user.DisplayName,
@@ -178,6 +186,45 @@ namespace API.Controllers
                     Token = _tokenService.CreateToken(user)
                 };
 
+        }
+
+        [Authorize]
+        [HttpPost("refreshToken")]
+        public async Task<ActionResult<UserDto>> RefreshToken()
+        {
+            var refreshToken = Request.Cookies["refreshToken"];
+            var user = await _userManager.Users.Include(r => r.RefreshTokens).Include(p => p.Photos)
+              .FirstOrDefaultAsync(x => x.UserName == User.FindFirstValue(ClaimsIdentity.DefaultNameClaimType));
+
+            if(user == null) return Unauthorized();
+
+            var oldtoken = user.RefreshTokens.SingleOrDefault(x => x.Token == refreshToken);
+
+            if(oldtoken != null && !oldtoken.IsActive) return Unauthorized();
+            
+            return  new UserDto 
+                {
+                    DisplayName = user.DisplayName,
+                    Image = user?.Photos?.FirstOrDefault(x => x.IsMain)?.Url,
+                    UserName = user.UserName,
+                    Token = _tokenService.CreateToken(user)
+                };
+        } 
+
+        private async Task SetRefreshToken(User user)
+        {
+            var refreshToken = _tokenService.GenerateRefreshToken();
+
+            user.RefreshTokens.Add(refreshToken);
+            await _userManager.UpdateAsync(user);
+
+            var cookieOpt = new CookieOptions
+            {
+                HttpOnly = true,
+                Expires = DateTime.UtcNow.AddDays(7)
+            };
+
+            Response.Cookies.Append("refreshToken", refreshToken.Token, cookieOpt);
         }
     }
 }
