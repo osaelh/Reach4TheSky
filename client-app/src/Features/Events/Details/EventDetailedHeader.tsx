@@ -7,7 +7,8 @@ import { IEvent } from '../../../App/Models/Event';
 import { useStore } from '../../../App/Stores/store';
 
 const eventImageStyle = {
-    filter: 'brightness(30%)'
+    filter: 'brightness(50%)',
+    height: '500px'
 };
 
 const eventImageTextStyle = {
