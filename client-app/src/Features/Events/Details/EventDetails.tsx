@@ -23,12 +23,12 @@ export default observer(function ActivityDetails(){
   if(!event || loadingInitial) return <LoadingComponent/>;
     return (
        <Grid>
-         <Grid.Column width={10}>
+         <Grid.Column computer={10} tablet={16} mobile={16}>
            <EventDetailedHeader event={event}/>
                 <EventDetailedInfo event={event} />
                 <EventDetailedChat eventId={event.id} />
          </Grid.Column>
-         <Grid.Column width={6}>
+         <Grid.Column computer={6} tablet={16} mobile={16}>
            <EventDetailedSideBar event={event}/>
          </Grid.Column>
        </Grid>

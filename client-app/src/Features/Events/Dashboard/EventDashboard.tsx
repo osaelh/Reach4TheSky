@@ -33,8 +33,12 @@ export default observer(function EventDashboard(){
     return (
 
        
-        <Grid>
-            <Grid.Column width="10">
+        <Grid reversed='computer'>         
+            <Grid.Column computer={6} tablet={16} mobile={16}>
+               <h2>Events filter</h2>
+                <EventFilter/>
+            </Grid.Column>
+             <Grid.Column computer={10} mobile={16} tablet={16}>
                 {eventStore.loadingInitial && ! loadingNext ? (
                     <>
                       <EventListItemPlaceholder/>
@@ -49,10 +53,6 @@ export default observer(function EventDashboard(){
                     <EventsList/>
                 </InfiniteScroll>
                 }     
-            </Grid.Column>
-            <Grid.Column width="6">
-               <h2>Events filter</h2>
-                <EventFilter/>
             </Grid.Column>
             <Grid.Column width={10}>
                 <Loader active={loadingNext}/>
