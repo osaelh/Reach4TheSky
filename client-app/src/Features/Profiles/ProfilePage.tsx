@@ -18,7 +18,7 @@ export default observer( function ProfilePage(){
     if(loadingProfile) return <LoadingComponent content='Loading componnent'/>
     return (
        <Grid>
-           <Grid.Column width={16}>
+           <Grid.Column width={16} stretched>
                {profile &&
                <>
                 <ProfileHeader profile={profile}/>    

@@ -11,7 +11,7 @@ export default observer( function ProfileHeader({profile}: Props){
     return (
         <Segment>
             <Grid>
-                <Grid.Column width={12}>
+                <Grid.Column computer={12} mobile={10}>
                     <Item.Group>
                         <Item>
                             <Item.Image avatar size='small' src={profile.image || "/assets/user.png"}/>
@@ -21,7 +21,7 @@ export default observer( function ProfileHeader({profile}: Props){
                         </Item>
                     </Item.Group>
                 </Grid.Column>
-                <Grid.Column width={4}>
+                <Grid.Column computer={4} mobile={6}>
                     <Statistic.Group>
                         <Statistic label='Followers' value='5' />
                         <Statistic label='Following' value='42' />

@@ -43,22 +43,25 @@ function App() {
       <Route
         path={'/(.+)'}
         render={() => (
-          <>      <NavBar />
-            <div style={{ marginTop: '5em' }}></div>
-            <Container>
-              <Switch>
-                <PrivateRoute exact path='/events' component={EventDashboard} />
-                <PrivateRoute path='/events/:id' component={EventDetails} />
-                <PrivateRoute key={location.key} path={['/createEvent', '/manage/:id']} component={EventForm} />
-                <PrivateRoute path='/Profiles/:username' component={ProfilePage} />
-                <PrivateRoute path='/errors' component={TestErrors} />
-                <Route path='/server-error' component={ServerError} />
-                <Route path='/account/registerSuccess' component={RegisterSuccess} />
-                <Route path='/account/verifyEmail' component={ConfirmEmail} />
-                <Route component={NotFound} />
-              </Switch>
+          <>
+            <NavBar >
 
-            </Container></>
+              <Container style={{minHeight: "100vh"}}>
+                <Switch>
+                  <PrivateRoute exact path='/events' component={EventDashboard} />
+                  <PrivateRoute path='/events/:id' component={EventDetails} />
+                  <PrivateRoute key={location.key} path={['/createEvent', '/manage/:id']} component={EventForm} />
+                  <PrivateRoute path='/Profiles/:username' component={ProfilePage} />
+                  <PrivateRoute path='/errors' component={TestErrors} />
+                  <Route path='/server-error' component={ServerError} />
+                  <Route path='/account/registerSuccess' component={RegisterSuccess} />
+                  <Route path='/account/verifyEmail' component={ConfirmEmail} />
+                  <Route component={NotFound} />
+                </Switch>
+
+              </Container>
+            </NavBar>
+          </>
         )}
       />
 
